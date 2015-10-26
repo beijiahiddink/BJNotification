@@ -39,12 +39,6 @@
     return self;
 }
 
-//- (void)setNotificationSelector:(SEL)notificationSelector {
-//    _notificationSelector = notificationSelector;
-//}
-
-
-
 @end
 
 
@@ -56,7 +50,6 @@
 @end
 
 static char observerBindKey;
-static char observerSelectorKey;
 
 @implementation BJNotificationCenter
 
