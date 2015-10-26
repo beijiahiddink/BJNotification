@@ -122,7 +122,10 @@ static char observerBindKey;
             *stop = YES;
         }
     }];
-    
+    NSMutableSet *observerSet = [self backSetWithNotificationObserver:observer];
+    if (!observerSet.count) {
+        objc_removeAssociatedObjects(observer);
+    }
 }
 
 #pragma mark - Private Method

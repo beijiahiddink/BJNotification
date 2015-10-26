@@ -18,10 +18,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [[BJNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMessage:) name:@"demo" object:@"beijiahiddink"];
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMessage:) name:@"demo" object:@"beijiahiddink"];
     
-    [[BJNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMessage) name:@"demo2" object:@"默认"];
-    [[BJNotificationCenter defaultCenter]postNotificationName:@"demo" object:@"第一次"];
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMessage) name:@"demo2" object:@"默认"];
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"demo" object:@"第一次"];
     
     
     return YES;

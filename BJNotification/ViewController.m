@@ -18,7 +18,7 @@
 @implementation ViewController
 
 - (void)dealloc {
-    [[BJNotificationCenter defaultCenter]removeObserver:self];
+    [[BJNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad {
@@ -36,8 +36,8 @@
 
 
 - (IBAction)buttonClick:(id)sender {
-    [[BJNotificationCenter defaultCenter]postNotificationName:@"demo" object:@"第二次"];
-    [[BJNotificationCenter defaultCenter]postNotificationName:@"demo2" object:nil];
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"demo" object:@"第二次"];
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"demo2" object:nil];
 }
 
 @end
