@@ -1,5 +1,5 @@
 //
-//  BJNotificationCenter.h
+//  BJNotification.h
 //  demo
 //
 //  Created by WangXu on 15/10/26.

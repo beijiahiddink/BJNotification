@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "BJNotificationCenter.h"
+#import "BJNotification.h"
 
 @interface AppDelegate ()
 
