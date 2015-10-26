@@ -52,7 +52,7 @@
 /**
  *  注册通知
  *
- *  @param observer  注册人
+ *  @param observer  注册者
  *  @param aSelector 注册响应方法
  *  @param aName     通知名字
  *  @param anObject  anObject
@@ -77,14 +77,14 @@
 /**
  *  删除注册人
  *
- *  @param observer 注册人
+ *  @param observer 注册者
  */
 - (void)removeObserver:(id)observer;
 
 /**
  *  删除注册人
  *
- *  @param observer 注册人
+ *  @param observer 注册者
  *  @param aName    通知名字
  *  @param anObject anObject
  */
