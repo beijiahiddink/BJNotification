@@ -107,7 +107,7 @@ static char observerBindKey;
 
 - (void)removeObserver:(id)observer {
     NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
-    NSMutableSet *observerSet = [self backSetWithNotificationObserver:observer];
+    NSMutableSet *observerSet = [self findBackSetWithNotificationObserver:observer];
     [observerSet removeAllObjects];
     objc_removeAssociatedObjects(observer);
 }
@@ -122,7 +122,7 @@ static char observerBindKey;
             *stop = YES;
         }
     }];
-    NSMutableSet *observerSet = [self backSetWithNotificationObserver:observer];
+    NSMutableSet *observerSet = [self findBackSetWithNotificationObserver:observer];
     if (!observerSet.count) {
         objc_removeAssociatedObjects(observer);
     }
