@@ -10,9 +10,10 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#pragma mark - BJNotification
 
 @implementation BJNotification
+
+#pragma mark - Public Method
 
 + (instancetype)notificationWithName:(NSString *)aName object:(id)anObject {
     return [[self alloc] initWithName:aName object:anObject userInfo:nil];
@@ -34,7 +35,7 @@
 
 @end
 
-#pragma mark - BJNotificationCenter
+
 
 @interface BJNotificationCenter ()
 
@@ -46,6 +47,8 @@ static char observerBindKey;
 static char observerSelectorKey;
 
 @implementation BJNotificationCenter
+
+#pragma mark - Public Method
 
 + (BJNotificationCenter *)defaultCenter {
     static BJNotificationCenter *center = nil;
