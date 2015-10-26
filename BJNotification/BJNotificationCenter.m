@@ -60,9 +60,9 @@ static char observerSelectorKey;
 }
 
 - (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)aName object:(id)anObject {
-    NSAssert(observer, @"the observer can not be nil with %@", NSStringFromClass([self class]));
-    NSAssert(aSelector, @"the selector can not be nil with %@", NSStringFromClass([self class]));
-    NSAssert(aName, @"the name can not be nil with %@", NSStringFromClass([self class]));
+    NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
+    NSAssert(aSelector, @"the selector can not be nil in the %@", NSStringFromClass([self class]));
+    NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
     NSMutableSet *set = [self backSetWithNotificationName:aName];
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
     NSString *selectorStr = NSStringFromSelector(aSelector);
@@ -72,7 +72,7 @@ static char observerSelectorKey;
 }
 
 - (void)postNotification:(BJNotification *)notification {
-    NSAssert(notification, @"post notification can not be nil with %@", NSStringFromClass([self class]));
+    NSAssert(notification, @"the notification can not be nil in the %@", NSStringFromClass([self class]));
     NSMutableSet *set = [self backSetWithNotificationName:notification.name];
     [set enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         BJNotification *oldNotification = objc_getAssociatedObject(obj, &observerBindKey);
@@ -91,20 +91,20 @@ static char observerSelectorKey;
 }
 
 - (void)postNotificationName:(NSString *)aName object:(id)anObject {
-    NSAssert(aName, @"the name can not be nil with %@", NSStringFromClass([self class]));
+    NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
     [self postNotification:bjNotification];
 }
 
 - (void)removeObserver:(id)observer {
-    NSAssert(observer, @"the observer can not be nil with %@", NSStringFromClass([self class]));
+    NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
     BJNotification *bjNotification = objc_getAssociatedObject(observer, &observerBindKey);
     [self removeObserver:observer name:bjNotification.name object:nil];
 }
 
 - (void)removeObserver:(id)observer name:(NSString *)aName object:(id)anObject {
-    NSAssert(observer, @"the observer can not be nil with %@", NSStringFromClass([self class]));
-    NSAssert(aName, @"the name can not be nil with %@", NSStringFromClass([self class]));
+    NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
+    NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
     objc_removeAssociatedObjects(observer);
     NSMutableSet *set = [self backSetWithNotificationName:aName];
     [set removeObject:observer];
