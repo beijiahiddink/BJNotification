@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "BJNotificationCenter.h"
 
 @interface AppDelegate ()
 
@@ -17,7 +18,21 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [[BJNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMessage:) name:@"demo" object:@"beijiahiddink"];
+    
+    [[BJNotificationCenter defaultCenter]addObserver:self selector:@selector(receiveMessage) name:@"demo2" object:@"默认"];
+    [[BJNotificationCenter defaultCenter]postNotificationName:@"demo" object:@"第一次"];
+    
+    
     return YES;
+}
+
+- (void)receiveMessage:(BJNotification *)notification {
+    NSLog(@"receive message object : %@ notificationName : %@",notification.object, notification.name);
+}
+
+- (void)receiveMessage {
+    NSLog(@"receive message object2");
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
