@@ -24,6 +24,16 @@
  *  @return 通知体实例
  */
 + (instancetype)notificationWithName:(NSString *)aName object:(id)anObject;
+
+/**
+ *  初始化通知体实例便利构造器
+ *
+ *  @param aName    通知名字
+ *  @param anObject anObject
+ *  @param aUserInfo aUserInfo
+ *
+ *  @return 通知体实例
+ */
 + (instancetype)notificationWithName:(NSString *)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo;
 
 /**
@@ -75,14 +85,14 @@
 - (void)postNotificationName:(NSString *)aName object:(id)anObject;
 
 /**
- *  删除注册人
+ *  删除注册者
  *
  *  @param observer 注册者
  */
 - (void)removeObserver:(id)observer;
 
 /**
- *  删除注册人
+ *  删除注册者
  *
  *  @param observer 注册者
  *  @param aName    通知名字
