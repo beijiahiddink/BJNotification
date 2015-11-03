@@ -14,7 +14,7 @@
 		78773D971BDDF8FF0018EC6E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78773D961BDDF8FF0018EC6E /* Images.xcassets */; };
 		78773D9A1BDDF8FF0018EC6E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78773D981BDDF8FF0018EC6E /* LaunchScreen.xib */; };
 		78773DA61BDDF8FF0018EC6E /* BJNotificationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773DA51BDDF8FF0018EC6E /* BJNotificationTests.m */; };
-		78773DB11BDDF92D0018EC6E /* BJNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773DB01BDDF92D0018EC6E /* BJNotificationCenter.m */; };
+		78B0D5E81BDF4A5800D3472E /* BJNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B0D5E71BDF4A5800D3472E /* BJNotification.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,8 +41,8 @@
 		78773D9F1BDDF8FF0018EC6E /* BJNotificationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BJNotificationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78773DA41BDDF8FF0018EC6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78773DA51BDDF8FF0018EC6E /* BJNotificationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BJNotificationTests.m; sourceTree = "<group>"; };
-		78773DAF1BDDF92D0018EC6E /* BJNotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotificationCenter.h; sourceTree = "<group>"; };
-		78773DB01BDDF92D0018EC6E /* BJNotificationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BJNotificationCenter.m; sourceTree = "<group>"; };
+		78B0D5E61BDF4A5800D3472E /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
+		78B0D5E71BDF4A5800D3472E /* BJNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BJNotification.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,8 +88,8 @@
 				78773D8E1BDDF8FF0018EC6E /* AppDelegate.m */,
 				78773D901BDDF8FF0018EC6E /* ViewController.h */,
 				78773D911BDDF8FF0018EC6E /* ViewController.m */,
-				78773DAF1BDDF92D0018EC6E /* BJNotificationCenter.h */,
-				78773DB01BDDF92D0018EC6E /* BJNotificationCenter.m */,
+				78B0D5E61BDF4A5800D3472E /* BJNotification.h */,
+				78B0D5E71BDF4A5800D3472E /* BJNotification.m */,
 				78773D931BDDF8FF0018EC6E /* Main.storyboard */,
 				78773D961BDDF8FF0018EC6E /* Images.xcassets */,
 				78773D981BDDF8FF0018EC6E /* LaunchScreen.xib */,
@@ -225,7 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78773D921BDDF8FF0018EC6E /* ViewController.m in Sources */,
-				78773DB11BDDF92D0018EC6E /* BJNotificationCenter.m in Sources */,
+				78B0D5E81BDF4A5800D3472E /* BJNotification.m in Sources */,
 				78773D8F1BDDF8FF0018EC6E /* AppDelegate.m in Sources */,
 				78773D8C1BDDF8FF0018EC6E /* main.m in Sources */,
 			);
@@ -430,6 +430,7 @@
 				78773DAB1BDDF8FF0018EC6E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		78773DAC1BDDF8FF0018EC6E /* Build configuration list for PBXNativeTarget "BJNotificationTests" */ = {
 			isa = XCConfigurationList;
@@ -438,6 +439,7 @@
 				78773DAE1BDDF8FF0018EC6E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
