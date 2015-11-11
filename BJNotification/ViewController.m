@@ -11,7 +11,6 @@
 
 @interface ViewController ()
 
-@property (weak, nonatomic) IBOutlet UIButton *button;
 
 @end
 
@@ -24,6 +23,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMessage:) name:@"demo" object:@"beijiahiddink"];
+    
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMessageSecond:) name:@"demo2" object:@"默认"];
+//    [[BJNotificationCenter defaultCenter] postNotificationName:@"demo" object:@"第一次"];
 
 }
 
@@ -32,11 +36,21 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)buttonClick:(UIButton *)sender {
+    sender.tag = !sender.tag;
+    if (sender.tag) {
+        [[BJNotificationCenter defaultCenter] postNotificationName:@"demo" object:@"第二次"];
+    } else {
+        [[BJNotificationCenter defaultCenter] postNotificationName:@"demo2" object:nil];
+    }
+}
 
+- (void)receiveMessage:(BJNotification *)notification {
 
-- (IBAction)buttonClick:(id)sender {
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"demo" object:@"第二次"];
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"demo2" object:nil];
+}
+
+- (void)receiveMessageSecond:(BJNotification *)notification {
+
 }
 
 @end

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7860A2FE1BF3058000D5E8A2 /* FirstPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */; };
+		7860A3011BF305B100D5E8A2 /* SecondPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */; };
 		78773D8C1BDDF8FF0018EC6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773D8B1BDDF8FF0018EC6E /* main.m */; };
 		78773D8F1BDDF8FF0018EC6E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773D8E1BDDF8FF0018EC6E /* AppDelegate.m */; };
 		78773D921BDDF8FF0018EC6E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773D911BDDF8FF0018EC6E /* ViewController.m */; };
@@ -28,6 +30,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7860A2FC1BF3058000D5E8A2 /* FirstPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstPageController.h; sourceTree = "<group>"; };
+		7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstPageController.m; sourceTree = "<group>"; };
+		7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondPageViewController.h; sourceTree = "<group>"; };
+		7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SecondPageViewController.m; sourceTree = "<group>"; };
 		78773D861BDDF8FF0018EC6E /* BJNotification.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BJNotification.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78773D8A1BDDF8FF0018EC6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78773D8B1BDDF8FF0018EC6E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -88,6 +94,10 @@
 				78773D8E1BDDF8FF0018EC6E /* AppDelegate.m */,
 				78773D901BDDF8FF0018EC6E /* ViewController.h */,
 				78773D911BDDF8FF0018EC6E /* ViewController.m */,
+				7860A2FC1BF3058000D5E8A2 /* FirstPageController.h */,
+				7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */,
+				7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */,
+				7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */,
 				78B0D5E61BDF4A5800D3472E /* BJNotification.h */,
 				78B0D5E71BDF4A5800D3472E /* BJNotification.m */,
 				78773D931BDDF8FF0018EC6E /* Main.storyboard */,
@@ -168,7 +178,8 @@
 		78773D7E1BDDF8FF0018EC6E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0640;
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = beijiahiddink;
 				TargetAttributes = {
 					78773D851BDDF8FF0018EC6E = {
@@ -225,7 +236,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				78773D921BDDF8FF0018EC6E /* ViewController.m in Sources */,
+				7860A2FE1BF3058000D5E8A2 /* FirstPageController.m in Sources */,
 				78B0D5E81BDF4A5800D3472E /* BJNotification.m in Sources */,
+				7860A3011BF305B100D5E8A2 /* SecondPageViewController.m in Sources */,
 				78773D8F1BDDF8FF0018EC6E /* AppDelegate.m in Sources */,
 				78773D8C1BDDF8FF0018EC6E /* main.m in Sources */,
 			);
@@ -290,6 +303,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -305,7 +319,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -343,7 +357,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -355,12 +369,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CLANG_ENABLE_MODULES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				INFOPLIST_FILE = BJNotification/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.beijiahiddink.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -368,11 +385,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
+				CLANG_ENABLE_MODULES = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				INFOPLIST_FILE = BJNotification/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.beijiahiddink.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -391,6 +410,7 @@
 				);
 				INFOPLIST_FILE = BJNotificationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.beijiahiddink.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BJNotification.app/BJNotification";
 			};
@@ -406,6 +426,7 @@
 				);
 				INFOPLIST_FILE = BJNotificationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.beijiahiddink.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BJNotification.app/BJNotification";
 			};

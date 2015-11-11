@@ -1,48 +1,113 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="RHe-hf-CUR">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Navigation Controller-->
+        <scene sceneID="Lhg-Jx-hL6">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                <navigationController id="RHe-hf-CUR" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="a81-Ku-CCg">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="PHK-Iw-sZs" kind="relationship" relationship="rootViewController" id="OYA-tX-UeR"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NlQ-Tt-fTO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-301" y="-287"/>
+        </scene>
+        <!--First Page Controller-->
+        <scene sceneID="E6m-0n-ewL">
+            <objects>
+                <viewController storyboardIdentifier="FirstPageController" id="PHK-Iw-sZs" customClass="FirstPageController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="av4-yJ-9ni"/>
+                        <viewControllerLayoutGuide type="bottom" id="vip-DF-7P2"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="ggV-xB-hQY">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6yr-4W-ret">
-                                <rect key="frame" x="250" y="280" width="100" height="40"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FeY-pG-DpL">
+                                <rect key="frame" x="279" y="289" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="reg-Zi-w9e">
+                                <rect key="frame" x="270" y="513" width="60" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="AB4-c8-SU8"/>
-                                    <constraint firstAttribute="height" constant="40" id="ltA-fX-ExX"/>
+                                    <constraint firstAttribute="height" constant="30" id="PTh-bG-eIZ"/>
+                                    <constraint firstAttribute="width" constant="60" id="Skl-Hs-J4R"/>
                                 </constraints>
-                                <state key="normal" title="点击接收通知">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                                <state key="normal" title="下一页"/>
                                 <connections>
-                                    <action selector="buttonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oNM-Bb-2hB"/>
+                                    <segue destination="4aO-r0-BKN" kind="push" id="FAY-rn-4MZ"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="6yr-4W-ret" secondAttribute="centerX" id="N3e-Ph-2Em"/>
-                            <constraint firstAttribute="centerY" secondItem="6yr-4W-ret" secondAttribute="centerY" id="hdH-Jp-fjU"/>
+                            <constraint firstItem="FeY-pG-DpL" firstAttribute="centerY" secondItem="ggV-xB-hQY" secondAttribute="centerY" id="7K9-A9-efx"/>
+                            <constraint firstItem="reg-Zi-w9e" firstAttribute="centerX" secondItem="ggV-xB-hQY" secondAttribute="centerX" id="NMf-dW-uyS"/>
+                            <constraint firstItem="FeY-pG-DpL" firstAttribute="centerX" secondItem="ggV-xB-hQY" secondAttribute="centerX" id="g21-U2-RR5"/>
+                            <constraint firstItem="vip-DF-7P2" firstAttribute="top" secondItem="reg-Zi-w9e" secondAttribute="bottom" constant="57" id="uhA-qn-mEu"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="ysz-k8-DCd"/>
                     <connections>
-                        <outlet property="button" destination="6yr-4W-ret" id="fqq-PG-Ijv"/>
+                        <outlet property="tipLabel" destination="FeY-pG-DpL" id="N4h-JT-p6D"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RzG-Wp-YAK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="326" y="-287"/>
+        </scene>
+        <!--Second Page View Controller-->
+        <scene sceneID="uXx-WB-3a1">
+            <objects>
+                <viewController storyboardIdentifier="SecondPageViewController" id="4aO-r0-BKN" customClass="SecondPageViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6qQ-Co-12U"/>
+                        <viewControllerLayoutGuide type="bottom" id="eBW-fc-jws"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="aNv-oz-Taa">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNj-ED-ujA">
+                                <rect key="frame" x="279" y="289" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ER-I4-bU2">
+                                <rect key="frame" x="270" y="520" width="60" height="30"/>
+                                <state key="normal" title="发送通知"/>
+                                <connections>
+                                    <action selector="postNotificationEvent:" destination="4aO-r0-BKN" eventType="touchUpInside" id="Zer-ri-mHz"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="eBW-fc-jws" firstAttribute="top" secondItem="1ER-I4-bU2" secondAttribute="bottom" constant="50" id="GZd-Rn-Xdf"/>
+                            <constraint firstItem="PNj-ED-ujA" firstAttribute="centerY" secondItem="aNv-oz-Taa" secondAttribute="centerY" id="RcY-5A-tEq"/>
+                            <constraint firstItem="1ER-I4-bU2" firstAttribute="centerX" secondItem="aNv-oz-Taa" secondAttribute="centerX" id="f3K-Nf-r13"/>
+                            <constraint firstItem="PNj-ED-ujA" firstAttribute="centerX" secondItem="aNv-oz-Taa" secondAttribute="centerX" id="jmH-06-WLT"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="TcZ-DM-cMH"/>
+                    <connections>
+                        <outlet property="tipLabel" destination="PNj-ED-ujA" id="oJW-Te-TJC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nj5-rd-MJP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="955" y="-287"/>
         </scene>
     </scenes>
 </document>

@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "BJNotification.h"
 
 @interface AppDelegate ()
 
@@ -18,22 +17,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMessage:) name:@"demo" object:@"beijiahiddink"];
-    
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveMessageSecond:) name:@"demo2" object:@"默认"];
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"demo" object:@"第一次"];
-    
-    
     return YES;
 }
 
-- (void)receiveMessage:(BJNotification *)notification {
-    NSLog(@"receive message object : %@ notificationName : %@",notification.object, notification.name);
-}
-
-- (void)receiveMessageSecond:(BJNotification *)notification {
-    NSLog(@"receive message object2 : %@ notificationName : %@",notification.object, notification.name);
-}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

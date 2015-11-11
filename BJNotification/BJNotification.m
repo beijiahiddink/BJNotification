@@ -108,11 +108,19 @@ static char observerBindKey;
 - (void)removeObserver:(id)observer {
     NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
     NSMutableSet *observerSet = [self findBackSetWithNotificationObserver:observer];
+    [observerSet enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
+        BJNotification *notification = obj;
+        [self removeObserver:observer name:notification.name object:nil isDeleteObserverSet:NO];
+    }];
     [observerSet removeAllObjects];
     objc_removeAssociatedObjects(observer);
 }
 
 - (void)removeObserver:(id)observer name:(NSString *)aName object:(id)anObject {
+    [self removeObserver:observer name:aName object:anObject isDeleteObserverSet:YES];
+}
+
+- (void)removeObserver:(id)observer name:(NSString *)aName object:(id)anObject isDeleteObserverSet:(BOOL)isDelete {
     NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
     NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
     NSMutableSet *nameSet = [self backSetWithNotificationName:aName];
@@ -122,9 +130,11 @@ static char observerBindKey;
             *stop = YES;
         }
     }];
-    NSMutableSet *observerSet = [self findBackSetWithNotificationObserver:observer];
-    if (!observerSet.count) {
-        objc_removeAssociatedObjects(observer);
+    if (isDelete) {
+        NSMutableSet *observerSet = [self findBackSetWithNotificationObserver:observer];
+        if (!observerSet.count) {
+            objc_removeAssociatedObjects(observer);
+        }
     }
 }
 
