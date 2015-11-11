@@ -1,5 +1,6 @@
-高仿NSNotification                                            
+BJNotification                                   
 =========
+本项目高仿NSNotification    
 ![image](https://github.com/beijiahiddink/beijiahiddink.github.io/blob/gh-pages/matter/BJNotification.gif)
 ###通知注册方法
 ```objective-c
