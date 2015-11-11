@@ -17,10 +17,6 @@
 
 @implementation FirstPageController
 
-- (void)dealloc {
-    [[BJNotificationCenter defaultCenter] removeObserver:self];
-    NSLog(@"dealloc");
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
