@@ -23,7 +23,8 @@
  *
  *  @return 通知体实例
  */
-+ (instancetype)notificationWithName:(NSString *)aName object:(id)anObject;
++ (instancetype)notificationWithName:(NSString *)aName
+                              object:(id)anObject;
 
 /**
  *  初始化通知体实例便利构造器
@@ -34,7 +35,9 @@
  *
  *  @return 通知体实例
  */
-+ (instancetype)notificationWithName:(NSString *)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo;
++ (instancetype)notificationWithName:(NSString *)aName
+                              object:(id)anObject
+                            userInfo:(NSDictionary *)aUserInfo;
 
 /**
  *  初始化通知体实例
@@ -45,7 +48,9 @@
  *
  *  @return  通知体实例
  */
-- (instancetype)initWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo;
+- (instancetype)initWithName:(NSString *)name
+                      object:(id)object
+                    userInfo:(NSDictionary *)userInfo;
 
 @end
 
@@ -67,7 +72,10 @@
  *  @param aName     通知名字
  *  @param anObject  anObject
  */
-- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)aName object:(id)anObject;
+- (void)addObserver:(id)observer
+           selector:(SEL)aSelector
+               name:(NSString *)aName
+             object:(id)anObject;
 
 /**
  *  发送通知
@@ -82,7 +90,8 @@
  *  @param aName    通知名字
  *  @param anObject anObject
  */
-- (void)postNotificationName:(NSString *)aName object:(id)anObject;
+- (void)postNotificationName:(NSString *)aName
+                      object:(id)anObject;
 
 /**
  *  删除注册者
@@ -98,6 +107,8 @@
  *  @param aName    通知名字
  *  @param anObject anObject
  */
-- (void)removeObserver:(id)observer name:(NSString *)aName object:(id)anObject;
+- (void)removeObserver:(id)observer
+                  name:(NSString *)aName
+                object:(id)anObject;
 
 @end

@@ -21,15 +21,20 @@
 
 #pragma mark - Public Method
 
-+ (instancetype)notificationWithName:(NSString *)aName object:(id)anObject {
++ (instancetype)notificationWithName:(NSString *)aName
+                              object:(id)anObject {
     return [[self alloc] initWithName:aName object:anObject userInfo:nil];
 }
 
-+ (instancetype)notificationWithName:(NSString *)aName object:(id)anObject userInfo:(NSDictionary *)aUserInfo {
++ (instancetype)notificationWithName:(NSString *)aName
+                              object:(id)anObject
+                            userInfo:(NSDictionary *)aUserInfo {
     return [[self alloc] initWithName:aName object:anObject userInfo:aUserInfo];
 }
 
-- (instancetype)initWithName:(NSString *)name object:(id)object userInfo:(NSDictionary *)userInfo {
+- (instancetype)initWithName:(NSString *)name
+                      object:(id)object
+                    userInfo:(NSDictionary *)userInfo {
     self = [super init];
     if (self) {
         self.name = name ;
@@ -64,7 +69,10 @@ static char observerBindKey;
     return center;
 }
 
-- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSString *)aName object:(id)anObject {
+- (void)addObserver:(id)observer
+           selector:(SEL)aSelector
+               name:(NSString *)aName
+             object:(id)anObject {
     NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
     NSAssert(aSelector, @"the selector can not be nil in the %@", NSStringFromClass([self class]));
     NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
@@ -99,7 +107,8 @@ static char observerBindKey;
     }];
 }
 
-- (void)postNotificationName:(NSString *)aName object:(id)anObject {
+- (void)postNotificationName:(NSString *)aName
+                      object:(id)anObject {
     NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
     [self postNotification:bjNotification];
@@ -116,11 +125,16 @@ static char observerBindKey;
     objc_removeAssociatedObjects(observer);
 }
 
-- (void)removeObserver:(id)observer name:(NSString *)aName object:(id)anObject {
+- (void)removeObserver:(id)observer
+                  name:(NSString *)aName
+                object:(id)anObject {
     [self removeObserver:observer name:aName object:anObject isDeleteObserverSet:YES];
 }
 
-- (void)removeObserver:(id)observer name:(NSString *)aName object:(id)anObject isDeleteObserverSet:(BOOL)isDelete {
+- (void)removeObserver:(id)observer
+                  name:(NSString *)aName
+                object:(id)anObject
+   isDeleteObserverSet:(BOOL)isDelete {
     NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
     NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
     NSMutableSet *nameSet = [self backSetWithNotificationName:aName];
