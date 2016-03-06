@@ -37,9 +37,9 @@
                     userInfo:(NSDictionary *)userInfo {
     self = [super init];
     if (self) {
-        self.name = name ;
-        self.object = object;
-        self.userInfo = userInfo;
+        _name = [name copy];
+        _object = object;
+        _userInfo = [userInfo copy];
     }
     return self;
 }
