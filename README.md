@@ -10,12 +10,9 @@ BJNotification
 ```objective-c
 [[BJNotificationCenter defaultCenter] postNotificationName:@"TipNotification" object:nil];
 ```
-###注意
-清理注册人时跟NSNotification不完全相同，不能写在dealloc方法里，防止清理失败，推荐写在：
+###清理注册人
 ```objective-c
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [[BJNotificationCenter defaultCenter] removeObserver:self];
+[[BJNotificationCenter defaultCenter] removeObserver:self];
 }
 ```
 代码存在很多不足，欢迎各位道友指正！
