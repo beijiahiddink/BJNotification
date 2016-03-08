@@ -54,7 +54,6 @@
 
 @end
 
-static char observerBindKey;
 
 @implementation BJNotificationCenter
 
@@ -69,122 +68,109 @@ static char observerBindKey;
     return center;
 }
 
+// { "notificationName" : { "notificationObserver" : [observer set] , "notificationObject" :  BJNotification class } }
 - (void)addObserver:(id)observer
            selector:(SEL)aSelector
                name:(NSString *)aName
              object:(id)anObject {
-    NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
-    NSAssert(aSelector, @"the selector can not be nil in the %@", NSStringFromClass([self class]));
-    NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
-    NSMutableSet *nameSet = [self backSetWithNotificationName:aName];
-    NSMutableSet *observerSet = [self backSetWithNotificationObserver:observer];
+    NSAssert(observer, @"the observer can not be nil");
+    NSAssert(aSelector, @"the selector can not be nil");
+    NSAssert(aName, @"the name can not be nil");
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
     [bjNotification setNotificationSelector:aSelector];
-    [observerSet addObject:bjNotification];
-    [nameSet addObject:observer];
+    NSMutableDictionary *notificationNameDic = [self.notificationDictionary objectForKey:aName];
+    NSHashTable *observerSet = [NSHashTable weakObjectsHashTable];
+    if (!notificationNameDic) {
+        [observerSet addObject:observer];
+        notificationNameDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:observerSet,@"notificationObserver",bjNotification,@"notificationObject", nil];
+        [self.notificationDictionary setObject:notificationNameDic forKey:aName];
+    } else {
+        NSHashTable *observerSet = [notificationNameDic objectForKey:@"notificationObserver"];
+        if (!observerSet) {
+            observerSet = [NSHashTable weakObjectsHashTable];
+        }
+        [observerSet addObject:observer];
+        [notificationNameDic setObject:observerSet forKey:@"notificationObserver"];
+    }
+     [notificationNameDic setObject:bjNotification forKey:@"notificationObject"];
 }
 
 - (void)postNotification:(BJNotification *)notification {
-    NSAssert(notification, @"the notification can not be nil in the %@", NSStringFromClass([self class]));
-    NSMutableSet *nameSet = [self backSetWithNotificationName:notification.name];
-    [nameSet enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        NSMutableSet *observerSet = [self backSetWithNotificationObserver:obj];
-        [observerSet enumerateObjectsUsingBlock:^(id obj2, BOOL *stop) {
-            BJNotification *oldNotification = (BJNotification *)obj2;
-            if (notification.name == oldNotification.name) {
-                if (notification.object) {
-                    oldNotification.object = notification.object;
-                }
-                if (notification.userInfo) {
-                    oldNotification.userInfo = notification.userInfo;
-                }
-                SEL selector = [oldNotification notificationSelector];
-                if ([obj respondsToSelector:selector]) {
-                    objc_msgSend(obj, selector, oldNotification);
-                }
-            }
-        }];
+    NSAssert(notification, @"the notification can not be nil");
+    BJNotification *oldNotification = [self findNotificationObject:notification.name];
+    if (notification.name == oldNotification.name) {
+        if (notification.object) {
+            oldNotification.object = notification.object;
+        }
+        if (notification.userInfo) {
+            oldNotification.userInfo = notification.userInfo;
+        }
+    }
+    NSHashTable *observerSet = [self findNotificationObserverSet:notification.name];
+    [observerSet.setRepresentation enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
+        SEL selector = [oldNotification notificationSelector];
+        if ([obj respondsToSelector:selector]) {
+            [obj performSelectorOnMainThread:selector withObject:oldNotification waitUntilDone:NO];
+        }
     }];
 }
 
 - (void)postNotificationName:(NSString *)aName
                       object:(id)anObject {
-    NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
+    NSAssert(aName, @"the name can not be nil");
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
     [self postNotification:bjNotification];
 }
 
 - (void)removeObserver:(id)observer {
-    NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
-    NSMutableSet *observerSet = [self findBackSetWithNotificationObserver:observer];
-    [observerSet enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
-        BJNotification *notification = obj;
-        [self removeObserver:observer name:notification.name object:nil isDeleteObserverSet:NO];
+    NSAssert(observer, @"the observer can not be nil");
+    if (!self.notificationDictionary.count) {
+        return;
+    }
+    [[self.notificationDictionary allKeys] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self removeObserver:observer name:[self.notificationDictionary objectForKey:obj] object:nil];
     }];
-    [observerSet removeAllObjects];
-    objc_removeAssociatedObjects(observer);
 }
 
 - (void)removeObserver:(id)observer
                   name:(NSString *)aName
                 object:(id)anObject {
-    [self removeObserver:observer name:aName object:anObject isDeleteObserverSet:YES];
-}
-
-- (void)removeObserver:(id)observer
-                  name:(NSString *)aName
-                object:(id)anObject
-   isDeleteObserverSet:(BOOL)isDelete {
-    NSAssert(observer, @"the observer can not be nil in the %@", NSStringFromClass([self class]));
-    NSAssert(aName, @"the name can not be nil in the %@", NSStringFromClass([self class]));
-    NSMutableSet *nameSet = [self backSetWithNotificationName:aName];
-    [nameSet enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+    NSAssert(observer, @"the observer can not be nil");
+    NSAssert(aName, @"the name can not be nil");
+    NSHashTable *notificationObserverSet = [self findNotificationObserverSet:aName];
+    if (!notificationObserverSet) {
+        return;
+    }
+    [notificationObserverSet.setRepresentation enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         if (obj == observer) {
-            [nameSet removeObject:observer];
+            [notificationObserverSet removeObject:observer];
+            if (!notificationObserverSet.count) {
+                [self.notificationDictionary removeObjectForKey:aName];
+            }
             *stop = YES;
         }
     }];
-    if (isDelete) {
-        NSMutableSet *observerSet = [self findBackSetWithNotificationObserver:observer];
-        if (!observerSet.count) {
-            objc_removeAssociatedObjects(observer);
-        }
-    }
 }
 
 #pragma mark - Private Method
 
 - (NSMutableDictionary *)notificationDictionary {
     if (!_notificationDictionary) {
-        self.notificationDictionary = [NSMutableDictionary dictionary];
+        _notificationDictionary = [NSMutableDictionary dictionary];
     }
     return _notificationDictionary;
 }
 
-- (NSMutableSet *)findBackSetWithNotificationName:(NSString *)notificationName {
-    return [self.notificationDictionary valueForKey:notificationName];
+- (NSMutableDictionary *)findNotificationNameDictionary:(NSString *)notificationName {
+    return [self.notificationDictionary objectForKey:notificationName];
 }
 
-- (NSMutableSet *)backSetWithNotificationName:(NSString *)notificationName {
-    if (![self findBackSetWithNotificationName:notificationName]) {
-        NSMutableSet *set = [NSMutableSet set];
-        [self.notificationDictionary setValue:set forKey:notificationName];
-        return set;
-    }
-    return [self findBackSetWithNotificationName:notificationName];
+- (NSHashTable *)findNotificationObserverSet:(NSString *)notificationName {
+    return [[self findNotificationNameDictionary:notificationName] objectForKey:@"notificationObserver"];
 }
 
-- (NSMutableSet *)backSetWithNotificationObserver:(id)observer {
-    if (![self findBackSetWithNotificationObserver:observer]) {
-        NSMutableSet *set = [NSMutableSet set];
-        objc_setAssociatedObject(observer, &observerBindKey, set, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return [self findBackSetWithNotificationObserver:observer];
+- (BJNotification *)findNotificationObject:(NSString *)notificationName {
+    return [[self findNotificationNameDictionary:notificationName] objectForKey:@"notificationObject"];
 }
-
-- (NSMutableSet *)findBackSetWithNotificationObserver:(id)observer {
-    return objc_getAssociatedObject(observer, &observerBindKey);
-}
-
 
 @end

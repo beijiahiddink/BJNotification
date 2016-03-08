@@ -18,12 +18,12 @@
 @implementation SecondPageViewController
 
 - (void)dealloc {
+    [[BJNotificationCenter defaultCenter] removeObserver:self];
     NSLog(@"SecondPageViewController dealloc");
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [[BJNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad {
