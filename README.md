@@ -13,7 +13,6 @@ BJNotification
 ###清理注册人
 ```objective-c
 [[BJNotificationCenter defaultCenter] removeObserver:self];
-}
 ```
 代码存在很多不足，欢迎各位道友指正！
 -----                
