@@ -7,8 +7,6 @@
 //
 
 #import "BJNotification.h"
-#import <objc/runtime.h>
-#import <objc/message.h>
 
 @interface BJNotification ()
 
@@ -73,7 +71,6 @@
            selector:(SEL)aSelector
                name:(NSString *)aName
              object:(id)anObject {
-    NSAssert(observer, @"the observer can not be nil");
     NSAssert(aSelector, @"the selector can not be nil");
     NSAssert(aName, @"the name can not be nil");
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
