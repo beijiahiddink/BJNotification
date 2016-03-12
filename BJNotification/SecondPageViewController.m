@@ -30,7 +30,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"SecondPage";
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:nil];
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:@"通知已发送"];
     self.tipLabel.text = @"没有任何提示";
 }
 
@@ -40,13 +40,11 @@
 }
 
 - (IBAction)postNotificationEvent:(UIButton *)sender {
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"TipNotification" object:@[@"通知已发送",[UIColor greenColor]]];
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"TipNotification" object:@"通知已发送"];
 }
 
 - (void)receiveTip:(BJNotification *)notification {
-    NSArray *array = notification.object;
-    self.tipLabel.text = array.firstObject;
-    self.tipLabel.textColor = array.lastObject;
+    self.tipLabel.text = notification.object;
 }
 
 

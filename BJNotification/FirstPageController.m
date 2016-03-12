@@ -22,7 +22,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"FirstPage";
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:nil];
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip1:) name:@"TipNotification" object:nil];
     self.tipLabel.text = @"没有任何提示";
 }
 
@@ -31,10 +31,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)receiveTip:(BJNotification *)notification {
-    NSArray *array = notification.object;
-    self.tipLabel.text = array.firstObject;
-    self.tipLabel.textColor = array.lastObject;
+- (void)receiveTip1:(BJNotification *)notification {
+    self.tipLabel.text = notification.object;
 }
 
 @end

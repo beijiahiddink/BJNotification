@@ -8,31 +8,28 @@
 
 #import "BJNotification.h"
 
-@interface BJNotification ()
-
-@property (nonatomic) SEL notificationSelector;
-
-@end
-
 
 @implementation BJNotification
 
 #pragma mark - Public Method
 
 + (instancetype)notificationWithName:(NSString *)aName
-                              object:(id)anObject {
+                              object:(nullable id)anObject {
+    NSAssert(aName, @"the name can not be nil");
     return [[self alloc] initWithName:aName object:anObject userInfo:nil];
 }
 
 + (instancetype)notificationWithName:(NSString *)aName
-                              object:(id)anObject
-                            userInfo:(NSDictionary *)aUserInfo {
+                              object:(nullable id)anObject
+                            userInfo:(nullable NSDictionary *)aUserInfo {
+    NSAssert(aName, @"the name can not be nil");
     return [[self alloc] initWithName:aName object:anObject userInfo:aUserInfo];
 }
 
 - (instancetype)initWithName:(NSString *)name
-                      object:(id)object
-                    userInfo:(NSDictionary *)userInfo {
+                      object:(nullable id)object
+                    userInfo:(nullable NSDictionary *)userInfo {
+    NSAssert(name, @"the name can not be nil");
     self = [super init];
     if (self) {
         _name = [name copy];
@@ -45,10 +42,23 @@
 @end
 
 
+@interface BJNotificationListenInfo : NSObject
+
+@property (nonatomic, weak) id listenObserver;
+@property (nonatomic) SEL listenSelector;
+@property (nonatomic, copy) NSString *listenName;
+@property (nullable, nonatomic) id listenObject;
+
+@end
+
+@implementation BJNotificationListenInfo
+
+@end
+
 
 @interface BJNotificationCenter ()
 
-@property (nonatomic, strong) NSMutableDictionary *notificationDictionary;
+@property (nonatomic, strong) NSMutableArray *notificationObserverArray;
 
 @end
 
@@ -66,108 +76,97 @@
     return center;
 }
 
-// { "notificationName" : { "notificationObserver" : [observer set] , "notificationObject" :  BJNotification class } }
 - (void)addObserver:(id)observer
            selector:(SEL)aSelector
                name:(NSString *)aName
-             object:(id)anObject {
+             object:(nullable id)anObject {
+    NSAssert(observer, @"the observer can not be nil");
     NSAssert(aSelector, @"the selector can not be nil");
     NSAssert(aName, @"the name can not be nil");
-    BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
-    [bjNotification setNotificationSelector:aSelector];
-    NSMutableDictionary *notificationNameDic = [self.notificationDictionary objectForKey:aName];
-    NSHashTable *observerSet = [NSHashTable weakObjectsHashTable];
-    if (!notificationNameDic) {
-        [observerSet addObject:observer];
-        notificationNameDic = [NSMutableDictionary dictionaryWithObjectsAndKeys:observerSet,@"notificationObserver",bjNotification,@"notificationObject", nil];
-        [self.notificationDictionary setObject:notificationNameDic forKey:aName];
-    } else {
-        NSHashTable *observerSet = [notificationNameDic objectForKey:@"notificationObserver"];
-        if (!observerSet) {
-            observerSet = [NSHashTable weakObjectsHashTable];
+    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        BJNotificationListenInfo *listenInfo = obj;
+        if (listenInfo.listenObserver == observer && listenInfo.listenObject == anObject && [listenInfo.listenName isEqualToString:aName]) {
+            [self.notificationObserverArray removeObjectAtIndex:idx];
+            *stop = YES;
         }
-        [observerSet addObject:observer];
-        [notificationNameDic setObject:observerSet forKey:@"notificationObserver"];
-    }
-     [notificationNameDic setObject:bjNotification forKey:@"notificationObject"];
+    }];
+    BJNotificationListenInfo *listenInfo = [[BJNotificationListenInfo alloc] init];
+    listenInfo.listenObserver = observer;
+    listenInfo.listenSelector = aSelector;
+    listenInfo.listenName = aName;
+    listenInfo.listenObject = anObject;
+    [self.notificationObserverArray addObject:listenInfo];
 }
 
 - (void)postNotification:(BJNotification *)notification {
     NSAssert(notification, @"the notification can not be nil");
-    BJNotification *oldNotification = [self findNotificationObject:notification.name];
-    if (notification.name == oldNotification.name) {
-        if (notification.object) {
-            oldNotification.object = notification.object;
-        }
-        if (notification.userInfo) {
-            oldNotification.userInfo = notification.userInfo;
-        }
-    }
-    NSHashTable *observerSet = [self findNotificationObserverSet:notification.name];
-    [observerSet.setRepresentation enumerateObjectsUsingBlock:^(id  _Nonnull obj, BOOL * _Nonnull stop) {
-        SEL selector = [oldNotification notificationSelector];
-        if ([obj respondsToSelector:selector]) {
-            [obj performSelectorOnMainThread:selector withObject:oldNotification waitUntilDone:NO];
+    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        BJNotificationListenInfo *listenInfo = obj;
+        if ([notification.name isEqualToString:listenInfo.listenName]) {
+            if (listenInfo.listenObject) {
+                if (notification.object == listenInfo.listenObject) {
+                    if ([listenInfo.listenObserver respondsToSelector:listenInfo.listenSelector]) {
+                        [listenInfo.listenObserver performSelectorOnMainThread:listenInfo.listenSelector withObject:notification waitUntilDone:NO];
+                    }
+                }
+            } else {
+                if ([listenInfo.listenObserver respondsToSelector:listenInfo.listenSelector]) {
+                    [listenInfo.listenObserver performSelectorOnMainThread:listenInfo.listenSelector withObject:notification waitUntilDone:NO];
+                }
+            }
         }
     }];
 }
 
 - (void)postNotificationName:(NSString *)aName
-                      object:(id)anObject {
+                      object:(nullable id)anObject {
     NSAssert(aName, @"the name can not be nil");
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
     [self postNotification:bjNotification];
 }
 
 - (void)removeObserver:(id)observer {
-    NSAssert(observer, @"the observer can not be nil");
-    if (!self.notificationDictionary.count) {
-        return;
-    }
-    [[self.notificationDictionary allKeys] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self removeObserver:observer name:[self.notificationDictionary objectForKey:obj] object:nil];
-    }];
+    [self removeObserver:observer name:nil object:nil];
 }
 
 - (void)removeObserver:(id)observer
-                  name:(NSString *)aName
-                object:(id)anObject {
+                  name:(nullable NSString *)aName
+                object:(nullable id)anObject {
     NSAssert(observer, @"the observer can not be nil");
-    NSAssert(aName, @"the name can not be nil");
-    NSHashTable *notificationObserverSet = [self findNotificationObserverSet:aName];
-    if (!notificationObserverSet) {
+    if (!self.notificationObserverArray.count) {
         return;
     }
-    [notificationObserverSet.setRepresentation enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        if (obj == observer) {
-            [notificationObserverSet removeObject:observer];
-            if (!notificationObserverSet.count) {
-                [self.notificationDictionary removeObjectForKey:aName];
+    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        BJNotificationListenInfo *listenInfo = obj;
+        if (listenInfo.listenObserver == observer) {
+            if (aName && !anObject) {
+                if ([listenInfo.listenName isEqualToString:aName]) {
+                    [self.notificationObserverArray removeObjectAtIndex:idx];
+                }
+            } else if (!aName && anObject) {
+                if (listenInfo.listenObject == anObject) {
+                    [self.notificationObserverArray removeObjectAtIndex:idx];
+                }
+            } else if (aName && anObject) {
+                if ([listenInfo.listenName isEqualToString:aName] && listenInfo.listenObject == anObject) {
+                    [self.notificationObserverArray removeObjectAtIndex:idx];
+                }
+            } else {
+                [self.notificationObserverArray removeObjectAtIndex:idx];
             }
-            *stop = YES;
+        } else if (!listenInfo.listenObserver) {
+            [self.notificationObserverArray removeObjectAtIndex:idx];
         }
     }];
 }
 
 #pragma mark - Private Method
 
-- (NSMutableDictionary *)notificationDictionary {
-    if (!_notificationDictionary) {
-        _notificationDictionary = [NSMutableDictionary dictionary];
+- (NSMutableArray *)notificationObserverArray {
+    if (!_notificationObserverArray) {
+        _notificationObserverArray = [NSMutableArray array];
     }
-    return _notificationDictionary;
-}
-
-- (NSMutableDictionary *)findNotificationNameDictionary:(NSString *)notificationName {
-    return [self.notificationDictionary objectForKey:notificationName];
-}
-
-- (NSHashTable *)findNotificationObserverSet:(NSString *)notificationName {
-    return [[self findNotificationNameDictionary:notificationName] objectForKey:@"notificationObserver"];
-}
-
-- (BJNotification *)findNotificationObject:(NSString *)notificationName {
-    return [[self findNotificationNameDictionary:notificationName] objectForKey:@"notificationObject"];
+    return _notificationObserverArray;
 }
 
 @end

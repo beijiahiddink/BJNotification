@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/****************	BJNotification	****************/
+
 @interface BJNotification : NSObject
 
-
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, strong) id object;
-@property (nonatomic, copy) NSDictionary *userInfo;
+@property (nullable, nonatomic, strong) id object;
+@property (nullable, nonatomic, copy) NSDictionary *userInfo;
 
 /**
  *  初始化通知体实例便利构造器
@@ -24,7 +27,7 @@
  *  @return 通知体实例
  */
 + (instancetype)notificationWithName:(NSString *)aName
-                              object:(id)anObject;
+                              object:(nullable id)anObject;
 
 /**
  *  初始化通知体实例便利构造器
@@ -36,8 +39,8 @@
  *  @return 通知体实例
  */
 + (instancetype)notificationWithName:(NSString *)aName
-                              object:(id)anObject
-                            userInfo:(NSDictionary *)aUserInfo;
+                              object:(nullable id)anObject
+                            userInfo:(nullable NSDictionary *)aUserInfo;
 
 /**
  *  初始化通知体实例
@@ -49,11 +52,12 @@
  *  @return  通知体实例
  */
 - (instancetype)initWithName:(NSString *)name
-                      object:(id)object
-                    userInfo:(NSDictionary *)userInfo;
+                      object:(nullable id)object
+                    userInfo:(nullable NSDictionary *)userInfo;
 
 @end
 
+/****************	BJNotificationCenter	****************/
 
 @interface BJNotificationCenter : NSObject
 
@@ -75,7 +79,7 @@
 - (void)addObserver:(id)observer
            selector:(SEL)aSelector
                name:(NSString *)aName
-             object:(id)anObject;
+             object:(nullable id)anObject;
 
 /**
  *  发送通知
@@ -91,7 +95,7 @@
  *  @param anObject anObject
  */
 - (void)postNotificationName:(NSString *)aName
-                      object:(id)anObject;
+                      object:(nullable id)anObject;
 
 /**
  *  删除注册者
@@ -108,7 +112,10 @@
  *  @param anObject anObject
  */
 - (void)removeObserver:(id)observer
-                  name:(NSString *)aName
-                object:(id)anObject;
+                  name:(nullable NSString *)aName
+                object:(nullable id)anObject;
 
 @end
+
+
+NS_ASSUME_NONNULL_END
