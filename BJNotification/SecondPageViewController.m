@@ -30,7 +30,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"SecondPage";
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:nil];
+    NSLog(@"第2次");
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:@"通知已发送"];
+    NSLog(@"第3次");
     self.tipLabel.text = @"没有任何提示";
 }
 

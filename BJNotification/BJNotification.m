@@ -7,7 +7,9 @@
 //
 
 #import "BJNotification.h"
-
+#import <objc/runtime.h>
+#import <objc/message.h>
+#import <objc/objc.h>
 
 @implementation BJNotification
 
@@ -42,16 +44,46 @@
 @end
 
 
-@interface BJNotificationListenInfo : NSObject
+@interface BJNotificationMessageInfo : NSObject
 
-@property (nonatomic, weak) id listenObserver;
-@property (nonatomic) SEL listenSelector;
-@property (nonatomic, copy) NSString *listenName;
-@property (nullable, nonatomic) id listenObject;
+@property (nonatomic, weak) id weakObserver;
+@property (nonatomic, strong) id strongObserver;
+@property (nonatomic) SEL selector;
+@property (nonatomic, copy) NSString *name;
+@property (nullable, nonatomic) id object;
+@property (nonatomic, copy) NSString *observerAddress;
 
 @end
 
-@implementation BJNotificationListenInfo
+@implementation BJNotificationMessageInfo
+
+- (void)dealloc {
+    NSLog(@"%@",self.debugDescription);
+}
+
+- (NSString *)debugDescription {
+    NSMutableString *description = [[NSMutableString alloc] init];
+    [description appendFormat:@"<%@ : %p>\n",[self class],self];
+    unsigned int count;
+    objc_property_t *propertyList = class_copyPropertyList([self class], &count);
+    for (int i = 0; i < count; i++) {
+        objc_property_t propertyClass = propertyList[i];
+        NSString *propertyName = [NSString stringWithUTF8String:property_getName(propertyClass)];
+        ;
+        if (i == 0) {
+            [description appendFormat:@"{\n"];
+        }
+        [description appendFormat:@"\t%@ : %p\n",propertyName,[self valueForKey:propertyName]];
+        if (i == count - 1) {
+            [description appendFormat:@"}"];
+        }
+    }
+    return [description copy];
+}
+
+- (id)valueForUndefinedKey:(NSString *)key {
+    return @"unknown";
+}
 
 @end
 
@@ -59,6 +91,7 @@
 @interface BJNotificationCenter ()
 
 @property (nonatomic, strong) NSMutableArray *notificationObserverArray;
+@property (nonatomic, strong) NSOperationQueue *notificationQueue;
 
 @end
 
@@ -83,39 +116,50 @@
     NSAssert(observer, @"the observer can not be nil");
     NSAssert(aSelector, @"the selector can not be nil");
     NSAssert(aName, @"the name can not be nil");
+    BJNotificationMessageInfo *messageInfo = [[BJNotificationMessageInfo alloc] init];
+    messageInfo.strongObserver = observer;
+    messageInfo.selector = aSelector;
+    messageInfo.name = aName;
+    messageInfo.object = anObject;
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(addObserverWithOperationMessage:) object:messageInfo];
+    [self.notificationQueue addOperation:operation];
+}
+
+- (void)addObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
     [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BJNotificationListenInfo *listenInfo = obj;
-        if (listenInfo.listenObserver == observer && listenInfo.listenObject == anObject && [listenInfo.listenName isEqualToString:aName]) {
+        BJNotificationMessageInfo *listenInfo = obj;
+        if (listenInfo.weakObserver == message.strongObserver && listenInfo.object == message.object && [listenInfo.name isEqualToString:message.name]) {
             [self.notificationObserverArray removeObjectAtIndex:idx];
             *stop = YES;
         }
     }];
-    BJNotificationListenInfo *listenInfo = [[BJNotificationListenInfo alloc] init];
-    listenInfo.listenObserver = observer;
-    listenInfo.listenSelector = aSelector;
-    listenInfo.listenName = aName;
-    listenInfo.listenObject = anObject;
-    [self.notificationObserverArray addObject:listenInfo];
+    message.weakObserver = message.strongObserver;
+    message.strongObserver = nil;
+    message.observerAddress = [NSString stringWithFormat:@"%p",message.weakObserver];
+    [self.notificationObserverArray addObject:message];
+    NSLog(@"\nadd thead:--%@",[NSThread currentThread]);
 }
 
 - (void)postNotification:(BJNotification *)notification {
     NSAssert(notification, @"the notification can not be nil");
-    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BJNotificationListenInfo *listenInfo = obj;
-        if ([notification.name isEqualToString:listenInfo.listenName]) {
-            if (listenInfo.listenObject) {
-                if (notification.object == listenInfo.listenObject) {
-                    if ([listenInfo.listenObserver respondsToSelector:listenInfo.listenSelector]) {
-                        [listenInfo.listenObserver performSelectorOnMainThread:listenInfo.listenSelector withObject:notification waitUntilDone:NO];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            BJNotificationMessageInfo *listenInfo = obj;
+            if ([notification.name isEqualToString:listenInfo.name]) {
+                if (listenInfo.object) {
+                    if (notification.object == listenInfo.object) {
+                        if ([listenInfo.weakObserver respondsToSelector:listenInfo.selector]) {
+                            [listenInfo.weakObserver performSelectorOnMainThread:listenInfo.selector withObject:notification waitUntilDone:NO];
+                        }
+                    }
+                } else {
+                    if ([listenInfo.weakObserver respondsToSelector:listenInfo.selector]) {
+                        [listenInfo.weakObserver performSelectorOnMainThread:listenInfo.selector withObject:notification waitUntilDone:NO];
                     }
                 }
-            } else {
-                if ([listenInfo.listenObserver respondsToSelector:listenInfo.listenSelector]) {
-                    [listenInfo.listenObserver performSelectorOnMainThread:listenInfo.listenSelector withObject:notification waitUntilDone:NO];
-                }
             }
-        }
-    }];
+        }];
+    });
 }
 
 - (void)postNotificationName:(NSString *)aName
@@ -136,28 +180,37 @@
     if (!self.notificationObserverArray.count) {
         return;
     }
+    BJNotificationMessageInfo *messageInfo = [[BJNotificationMessageInfo alloc] init];
+    messageInfo.name = aName;
+    messageInfo.object = anObject;
+    messageInfo.observerAddress = [NSString stringWithFormat:@"%p",observer];
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(removeObserverWithOperationMessage:) object:messageInfo];
+    [self.notificationQueue addOperation:operation];
+}
+
+- (void)removeObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
+    NSMutableSet *indexSet = [NSMutableSet set];
     [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BJNotificationListenInfo *listenInfo = obj;
-        if (listenInfo.listenObserver == observer) {
-            if (aName && !anObject) {
-                if ([listenInfo.listenName isEqualToString:aName]) {
-                    [self.notificationObserverArray removeObjectAtIndex:idx];
+        BJNotificationMessageInfo *listenInfo = obj;
+        if (listenInfo.weakObserver) {
+            if ([listenInfo.observerAddress isEqualToString:message.observerAddress]) {
+                if ((message.name && !message.object) && ([listenInfo.name isEqualToString:message.name])) {
+                    [indexSet addObject:[NSNumber numberWithInteger:idx]];
+                } else if ((!message.name && message.object) && (listenInfo.object == message.object)) {
+                    [indexSet addObject:[NSNumber numberWithInteger:idx]];
+                } else if ((message.name && message.object) && ([listenInfo.name isEqualToString:message.name]) && (listenInfo.object == message.object)) {
+                    [indexSet addObject:[NSNumber numberWithInteger:idx]];
                 }
-            } else if (!aName && anObject) {
-                if (listenInfo.listenObject == anObject) {
-                    [self.notificationObserverArray removeObjectAtIndex:idx];
-                }
-            } else if (aName && anObject) {
-                if ([listenInfo.listenName isEqualToString:aName] && listenInfo.listenObject == anObject) {
-                    [self.notificationObserverArray removeObjectAtIndex:idx];
-                }
-            } else {
-                [self.notificationObserverArray removeObjectAtIndex:idx];
             }
-        } else if (!listenInfo.listenObserver) {
-            [self.notificationObserverArray removeObjectAtIndex:idx];
+        } else {
+            [indexSet addObject:[NSNumber numberWithInteger:idx]];
         }
     }];
+    [indexSet.allObjects enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSInteger index = [obj integerValue];
+        [self.notificationObserverArray removeObjectAtIndex:index];
+    }];
+    NSLog(@"\nremove thead:--%@",[NSThread currentThread]);
 }
 
 #pragma mark - Private Method
@@ -167,6 +220,13 @@
         _notificationObserverArray = [NSMutableArray array];
     }
     return _notificationObserverArray;
+}
+
+- (NSOperationQueue *)notificationQueue {
+    if (!_notificationQueue) {
+        _notificationQueue = [NSOperationQueue mainQueue];
+    }
+    return _notificationQueue;
 }
 
 @end

@@ -23,6 +23,7 @@
     // Do any additional setup after loading the view.
     self.title = @"FirstPage";
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip1:) name:@"TipNotification" object:nil];
+    NSLog(@"第1次");
     self.tipLabel.text = @"没有任何提示";
 }
 
