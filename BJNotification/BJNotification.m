@@ -171,28 +171,30 @@
 }
 
 - (void)removeObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
-    NSMutableSet *indexSet = [NSMutableSet set];
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
     [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         BJNotificationMessageInfo *listenInfo = obj;
         if (listenInfo.weakObserver) {
             if ([listenInfo.observerAddress isEqualToString:message.observerAddress]) {
                 if ((message.name && !message.object) && ([listenInfo.name isEqualToString:message.name])) {
-                    [indexSet addObject:[NSNumber numberWithInteger:idx]];
+                    [indexSet addIndex:idx];
                 } else if ((!message.name && message.object) && (listenInfo.object == message.object)) {
-                    [indexSet addObject:[NSNumber numberWithInteger:idx]];
+                    [indexSet addIndex:idx];
                 } else if ((message.name && message.object) && ([listenInfo.name isEqualToString:message.name]) && (listenInfo.object == message.object)) {
-                    [indexSet addObject:[NSNumber numberWithInteger:idx]];
+                    [indexSet addIndex:idx];
                 }
             }
         } else {
-            [indexSet addObject:[NSNumber numberWithInteger:idx]];
+            [indexSet addIndex:idx];
         }
     }];
-    [indexSet.allObjects enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSInteger index = [obj integerValue];
-        [self.notificationObserverArray removeObjectAtIndex:index];
-    }];
     NSLog(@"\nremove thead:--%@",[NSThread currentThread]);
+    if (!indexSet.count) {
+        return;
+    }
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.notificationObserverArray removeObjectAtIndex:idx];
+    }];
 }
 
 #pragma mark - Private Method
