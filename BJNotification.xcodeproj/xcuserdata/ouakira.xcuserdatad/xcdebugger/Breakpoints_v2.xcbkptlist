@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BJNotification/FirstPageController.m"
-            timestampString = "479554603.666299"
+            timestampString = "479571721.982284"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
             landmarkName = "-receiveTip1:"
             landmarkType = "5">
          </BreakpointContent>

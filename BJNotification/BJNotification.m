@@ -8,8 +8,6 @@
 
 #import "BJNotification.h"
 #import <objc/runtime.h>
-#import <objc/message.h>
-#import <objc/objc.h>
 
 @implementation BJNotification
 
@@ -62,23 +60,7 @@
 }
 
 - (NSString *)debugDescription {
-    NSMutableString *description = [[NSMutableString alloc] init];
-    [description appendFormat:@"<%@ : %p>\n",[self class],self];
-    unsigned int count;
-    objc_property_t *propertyList = class_copyPropertyList([self class], &count);
-    for (int i = 0; i < count; i++) {
-        objc_property_t propertyClass = propertyList[i];
-        NSString *propertyName = [NSString stringWithUTF8String:property_getName(propertyClass)];
-        ;
-        if (i == 0) {
-            [description appendFormat:@"{\n"];
-        }
-        [description appendFormat:@"\t%@ : %p\n",propertyName,[self valueForKey:propertyName]];
-        if (i == count - 1) {
-            [description appendFormat:@"}"];
-        }
-    }
-    return [description copy];
+    return [self bj_debugDescription];
 }
 
 - (id)valueForUndefinedKey:(NSString *)key {
@@ -227,6 +209,31 @@
         _notificationQueue = [NSOperationQueue mainQueue];
     }
     return _notificationQueue;
+}
+
+
+@end
+
+@implementation NSObject (BJDebugDescription)
+
+- (NSString *)bj_debugDescription {
+    NSMutableString *description = [[NSMutableString alloc] init];
+    [description appendFormat:@"*****%@*****\n<%@ : %p>\n",NSStringFromSelector(_cmd),[self class],self];
+    unsigned int count;
+    objc_property_t *propertyList = class_copyPropertyList([self class], &count);
+    for (int i = 0; i < count; i++) {
+        objc_property_t propertyClass = propertyList[i];
+        NSString *propertyName = [NSString stringWithUTF8String:property_getName(propertyClass)];
+        ;
+        if (i == 0) {
+            [description appendFormat:@"{\n"];
+        }
+        [description appendFormat:@"\t%@ : %p\n",propertyName,[self valueForKey:propertyName]];
+        if (i == count - 1) {
+            [description appendFormat:@"}"];
+        }
+    }
+    return [description copy];
 }
 
 @end
