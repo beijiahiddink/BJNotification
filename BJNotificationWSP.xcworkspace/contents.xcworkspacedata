@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:BJNotification"
+      name = "BJNotification">
+      <FileRef
+         location = "group:BJNotification.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../README.md">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:BJNotificationFW"
+      name = "BJNotificationFW">
+      <FileRef
+         location = "group:BJNotificationFW.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>

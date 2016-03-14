@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B8B1B691C96C5010042CF63 /* libBJNotificationSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B8B1B681C96C5010042CF63 /* libBJNotificationSDK.a */; };
 		7860A2FE1BF3058000D5E8A2 /* FirstPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */; };
 		7860A3011BF305B100D5E8A2 /* SecondPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */; };
 		78773D8C1BDDF8FF0018EC6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773D8B1BDDF8FF0018EC6E /* main.m */; };
@@ -15,7 +16,6 @@
 		78773D971BDDF8FF0018EC6E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78773D961BDDF8FF0018EC6E /* Images.xcassets */; };
 		78773D9A1BDDF8FF0018EC6E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78773D981BDDF8FF0018EC6E /* LaunchScreen.xib */; };
 		78773DA61BDDF8FF0018EC6E /* BJNotificationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773DA51BDDF8FF0018EC6E /* BJNotificationTests.m */; };
-		78B0D5E81BDF4A5800D3472E /* BJNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 78B0D5E71BDF4A5800D3472E /* BJNotification.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2B8B1B681C96C5010042CF63 /* libBJNotificationSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBJNotificationSDK.a; sourceTree = "<group>"; };
 		7860A2FC1BF3058000D5E8A2 /* FirstPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstPageController.h; sourceTree = "<group>"; };
 		7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstPageController.m; sourceTree = "<group>"; };
 		7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondPageViewController.h; sourceTree = "<group>"; };
@@ -45,7 +46,6 @@
 		78773DA41BDDF8FF0018EC6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78773DA51BDDF8FF0018EC6E /* BJNotificationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BJNotificationTests.m; sourceTree = "<group>"; };
 		78B0D5E61BDF4A5800D3472E /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
-		78B0D5E71BDF4A5800D3472E /* BJNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BJNotification.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B8B1B691C96C5010042CF63 /* libBJNotificationSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +95,7 @@
 				7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */,
 				7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */,
 				78B0D5E61BDF4A5800D3472E /* BJNotification.h */,
-				78B0D5E71BDF4A5800D3472E /* BJNotification.m */,
+				2B8B1B681C96C5010042CF63 /* libBJNotificationSDK.a */,
 				78773D931BDDF8FF0018EC6E /* Main.storyboard */,
 				78773D961BDDF8FF0018EC6E /* Images.xcassets */,
 				78773D981BDDF8FF0018EC6E /* LaunchScreen.xib */,
@@ -179,6 +180,7 @@
 				TargetAttributes = {
 					78773D851BDDF8FF0018EC6E = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = LF99LT2V35;
 					};
 					78773D9E1BDDF8FF0018EC6E = {
 						CreatedOnToolsVersion = 6.4;
@@ -231,7 +233,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7860A2FE1BF3058000D5E8A2 /* FirstPageController.m in Sources */,
-				78B0D5E81BDF4A5800D3472E /* BJNotification.m in Sources */,
 				7860A3011BF305B100D5E8A2 /* SecondPageViewController.m in Sources */,
 				78773D8F1BDDF8FF0018EC6E /* AppDelegate.m in Sources */,
 				78773D8C1BDDF8FF0018EC6E /* main.m in Sources */,
@@ -367,10 +368,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				INFOPLIST_FILE = BJNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/BJNotification",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beijiahiddink.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -383,10 +389,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_STRICT_OBJC_MSGSEND = NO;
 				INFOPLIST_FILE = BJNotification/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/BJNotification",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.beijiahiddink.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
