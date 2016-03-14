@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2B8B1B691C96C5010042CF63 /* libBJNotificationSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B8B1B681C96C5010042CF63 /* libBJNotificationSDK.a */; };
+		2B8CC6D71C96DCF100B2CE0A /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 2B8CC6D61C96DCF100B2CE0A /* README.md */; };
 		7860A2FE1BF3058000D5E8A2 /* FirstPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */; };
 		7860A3011BF305B100D5E8A2 /* SecondPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */; };
 		78773D8C1BDDF8FF0018EC6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773D8B1BDDF8FF0018EC6E /* main.m */; };
@@ -30,6 +31,7 @@
 
 /* Begin PBXFileReference section */
 		2B8B1B681C96C5010042CF63 /* libBJNotificationSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBJNotificationSDK.a; sourceTree = "<group>"; };
+		2B8CC6D61C96DCF100B2CE0A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = SOURCE_ROOT; };
 		7860A2FC1BF3058000D5E8A2 /* FirstPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstPageController.h; sourceTree = "<group>"; };
 		7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstPageController.m; sourceTree = "<group>"; };
 		7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondPageViewController.h; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 		78773D891BDDF8FF0018EC6E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2B8CC6D61C96DCF100B2CE0A /* README.md */,
 				78773D8A1BDDF8FF0018EC6E /* Info.plist */,
 				78773D8B1BDDF8FF0018EC6E /* main.m */,
 			);
@@ -234,6 +237,7 @@
 			files = (
 				7860A2FE1BF3058000D5E8A2 /* FirstPageController.m in Sources */,
 				7860A3011BF305B100D5E8A2 /* SecondPageViewController.m in Sources */,
+				2B8CC6D71C96DCF100B2CE0A /* README.md in Sources */,
 				78773D8F1BDDF8FF0018EC6E /* AppDelegate.m in Sources */,
 				78773D8C1BDDF8FF0018EC6E /* main.m in Sources */,
 			);

@@ -7,9 +7,6 @@
       <FileRef
          location = "group:BJNotification.xcodeproj">
       </FileRef>
-      <FileRef
-         location = "group:../README.md">
-      </FileRef>
    </Group>
    <Group
       location = "group:BJNotificationFW"
