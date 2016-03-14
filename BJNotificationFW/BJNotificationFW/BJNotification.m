@@ -220,7 +220,7 @@
 
 - (NSString *)bj_debugDescription {
     NSMutableString *description = [[NSMutableString alloc] init];
-    [description appendFormat:@"*****%@*****\n<%@ : %p>\n",NSStringFromSelector(_cmd),[self class],self];
+    [description appendFormat:@"*****%@*****\n<%@: %p>\n",NSStringFromSelector(_cmd),[self class],self];
     unsigned int count;
     objc_property_t *propertyList = class_copyPropertyList([self class], &count);
     for (int i = 0; i < count; i++) {
@@ -230,7 +230,7 @@
         if (i == 0) {
             [description appendFormat:@"{\n"];
         }
-        [description appendFormat:@"\t%@ : %p\n",propertyName,[self valueForKey:propertyName]];
+        [description appendFormat:@"\t%@: %p\n",propertyName,[self valueForKey:propertyName]];
         if (i == count - 1) {
             [description appendFormat:@"}"];
         }
