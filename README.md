@@ -1,9 +1,6 @@
 BJNotification                                   
 --
 ###本项目高仿NSNotification
-<p align="center" >
-<img src="https://github.com/beijiahiddink/BJNotification/blob/master/BJNotification.gif" width="320" height="568"/>
-</p>
 ####1. 通知注册方法
 ```objective-c
 [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:nil];

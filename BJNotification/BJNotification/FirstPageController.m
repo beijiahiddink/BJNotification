@@ -23,7 +23,7 @@
     // Do any additional setup after loading the view.
     self.title = @"FirstPage";
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip1:) name:@"TipNotification" object:nil];
-    self.tipLabel.text = @"没有任何提示";
+    self.tipLabel.text = @"静夜思";
 }
 
 - (void)didReceiveMemoryWarning {

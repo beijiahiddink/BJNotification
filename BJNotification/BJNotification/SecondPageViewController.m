@@ -31,8 +31,7 @@
     // Do any additional setup after loading the view.
     self.title = @"SecondPage";
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:nil];
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:@"通知已发送"];
-    self.tipLabel.text = @"没有任何提示";
+    self.tipLabel.text = @"静夜思";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,7 +40,9 @@
 }
 
 - (IBAction)postNotificationEvent:(UIButton *)sender {
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"TipNotification" object:@"通知已发送"];
+    NSArray *array = @[@"窗前明月光",@"疑是地上霜",@"举头望明月",@"低头思故乡"];
+    int index = arc4random() % array.count;
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"TipNotification" object:array[index]];
 }
 
 - (void)receiveTip:(BJNotification *)notification {

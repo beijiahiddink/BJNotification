@@ -9,6 +9,8 @@
 #import "BJNotification.h"
 #import <objc/runtime.h>
 
+#pragma mark - BJNotificationClass
+
 @implementation BJNotification
 
 #pragma mark - Public Method
@@ -41,6 +43,7 @@
 
 @end
 
+#pragma mark - BJNotificationMessageInfoClass
 
 @interface BJNotificationMessageInfo : NSObject
 
@@ -69,6 +72,7 @@
 
 @end
 
+#pragma mark - BJNotificationCenterClass
 
 @interface BJNotificationCenter ()
 
@@ -76,7 +80,6 @@
 @property (nonatomic, strong) NSOperationQueue *notificationQueue;
 
 @end
-
 
 @implementation BJNotificationCenter
 
@@ -105,21 +108,6 @@
     messageInfo.object = anObject;
     NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(addObserverWithOperationMessage:) object:messageInfo];
     [self.notificationQueue addOperation:operation];
-}
-
-- (void)addObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
-    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BJNotificationMessageInfo *listenInfo = obj;
-        if (listenInfo.weakObserver == message.strongObserver && listenInfo.object == message.object && [listenInfo.name isEqualToString:message.name]) {
-            [self.notificationObserverArray removeObjectAtIndex:idx];
-            *stop = YES;
-        }
-    }];
-    message.weakObserver = message.strongObserver;
-    message.strongObserver = nil;
-    message.observerAddress = [NSString stringWithFormat:@"%p",message.weakObserver];
-    [self.notificationObserverArray addObject:message];
-    NSLog(@"\nadd thead:--%@",[NSThread currentThread]);
 }
 
 - (void)postNotification:(BJNotification *)notification {
@@ -170,6 +158,37 @@
     [self.notificationQueue addOperation:operation];
 }
 
+#pragma mark - Private Method
+
+- (NSMutableArray *)notificationObserverArray {
+    if (!_notificationObserverArray) {
+        _notificationObserverArray = [NSMutableArray array];
+    }
+    return _notificationObserverArray;
+}
+
+- (NSOperationQueue *)notificationQueue {
+    if (!_notificationQueue) {
+        _notificationQueue = [NSOperationQueue mainQueue];
+    }
+    return _notificationQueue;
+}
+
+- (void)addObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
+    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        BJNotificationMessageInfo *listenInfo = obj;
+        if (listenInfo.weakObserver == message.strongObserver && listenInfo.object == message.object && [listenInfo.name isEqualToString:message.name]) {
+            [self.notificationObserverArray removeObjectAtIndex:idx];
+            *stop = YES;
+        }
+    }];
+    message.weakObserver = message.strongObserver;
+    message.strongObserver = nil;
+    message.observerAddress = [NSString stringWithFormat:@"%p",message.weakObserver];
+    [self.notificationObserverArray addObject:message];
+    NSLog(@"\nadd thead:--%@",[NSThread currentThread]);
+}
+
 - (void)removeObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
     [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -197,26 +216,13 @@
     }];
 }
 
-#pragma mark - Private Method
-
-- (NSMutableArray *)notificationObserverArray {
-    if (!_notificationObserverArray) {
-        _notificationObserverArray = [NSMutableArray array];
-    }
-    return _notificationObserverArray;
-}
-
-- (NSOperationQueue *)notificationQueue {
-    if (!_notificationQueue) {
-        _notificationQueue = [NSOperationQueue mainQueue];
-    }
-    return _notificationQueue;
-}
-
-
 @end
 
+#pragma mark - NSObject Category
+
 @implementation NSObject (BJDebugDescription)
+
+#pragma mark - Public Method
 
 - (NSString *)bj_debugDescription {
     NSMutableString *description = [[NSMutableString alloc] init];
@@ -230,9 +236,11 @@
         if (i == 0) {
             [description appendFormat:@"{\n"];
         }
-        [description appendFormat:@"\t%@: %p\n",propertyName,[self valueForKey:propertyName]];
+        [description appendFormat:@"\t%@: %p",propertyName,[self valueForKey:propertyName]];
         if (i == count - 1) {
-            [description appendFormat:@"}"];
+            [description appendFormat:@"\n}"];
+        } else {
+            [description appendFormat:@",\n"];
         }
     }
     return [description copy];
