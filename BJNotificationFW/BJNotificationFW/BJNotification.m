@@ -175,9 +175,11 @@
 }
 
 - (void)addObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.weakObserver = %@ And self.object = %@ And self.name == '%@'",message.strongObserver, message.object, message.name];
     [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         BJNotificationMessageInfo *listenInfo = obj;
-        if (listenInfo.weakObserver == message.strongObserver && listenInfo.object == message.object && [listenInfo.name isEqualToString:message.name]) {
+        BOOL isSame = [predicate evaluateWithObject:listenInfo];
+        if (isSame) {
             [self.notificationObserverArray removeObjectAtIndex:idx];
             *stop = YES;
         }
@@ -190,30 +192,23 @@
 }
 
 - (void)removeObserverWithOperationMessage:(BJNotificationMessageInfo *)message {
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.notificationObserverArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         BJNotificationMessageInfo *listenInfo = obj;
         if (listenInfo.weakObserver) {
             if ([listenInfo.observerAddress isEqualToString:message.observerAddress]) {
                 if ((message.name && !message.object) && ([listenInfo.name isEqualToString:message.name])) {
-                    [indexSet addIndex:idx];
+                    [self.notificationObserverArray removeObjectAtIndex:idx];
                 } else if ((!message.name && message.object) && (listenInfo.object == message.object)) {
-                    [indexSet addIndex:idx];
+                    [self.notificationObserverArray removeObjectAtIndex:idx];
                 } else if ((message.name && message.object) && ([listenInfo.name isEqualToString:message.name]) && (listenInfo.object == message.object)) {
-                    [indexSet addIndex:idx];
+                    [self.notificationObserverArray removeObjectAtIndex:idx];
                 }
             }
         } else {
-            [indexSet addIndex:idx];
+            [self.notificationObserverArray removeObjectAtIndex:idx];
         }
     }];
     NSLog(@"\nremove thead:--%@",[NSThread currentThread]);
-    if (!indexSet.count) {
-        return;
-    }
-    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-        [self.notificationObserverArray removeObjectAtIndex:idx];
-    }];
 }
 
 @end

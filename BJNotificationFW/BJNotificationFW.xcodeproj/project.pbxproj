@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B461DE01C97C92500F72757 /* BJNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B461DDF1C97C92500F72757 /* BJNotification.m */; };
+		2BE1DB181CC5027A00BF5A29 /* BJNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE1DB171CC5027A00BF5A29 /* BJNotification.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,9 +23,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2B461DDE1C97C92500F72757 /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
-		2B461DDF1C97C92500F72757 /* BJNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BJNotification.m; sourceTree = "<group>"; };
 		2B8B1B591C96BE1A0042CF63 /* libBJNotificationFW.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBJNotificationFW.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BE1DB161CC5027A00BF5A29 /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
+		2BE1DB171CC5027A00BF5A29 /* BJNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BJNotification.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +58,8 @@
 		2B8B1B6A1C96CD7A0042CF63 /* BJNotificationFW */ = {
 			isa = PBXGroup;
 			children = (
-				2B461DDE1C97C92500F72757 /* BJNotification.h */,
-				2B461DDF1C97C92500F72757 /* BJNotification.m */,
+				2BE1DB161CC5027A00BF5A29 /* BJNotification.h */,
+				2BE1DB171CC5027A00BF5A29 /* BJNotification.m */,
 			);
 			path = BJNotificationFW;
 			sourceTree = "<group>";
@@ -121,7 +121,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B461DE01C97C92500F72757 /* BJNotification.m in Sources */,
+				2BE1DB181CC5027A00BF5A29 /* BJNotification.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
