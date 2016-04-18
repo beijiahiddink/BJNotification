@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2B8CC6D71C96DCF100B2CE0A /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 2B8CC6D61C96DCF100B2CE0A /* README.md */; };
-		2BE1DB1A1CC5066F00BF5A29 /* libBJNotificationSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE1DB191CC5066F00BF5A29 /* libBJNotificationSDK.a */; };
+		2BE1DB1C1CC5218500BF5A29 /* libBJNotificationSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE1DB1B1CC5218500BF5A29 /* libBJNotificationSDK.a */; };
 		7860A2FE1BF3058000D5E8A2 /* FirstPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */; };
 		7860A3011BF305B100D5E8A2 /* SecondPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */; };
 		78773D8C1BDDF8FF0018EC6E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 78773D8B1BDDF8FF0018EC6E /* main.m */; };
@@ -32,7 +32,7 @@
 /* Begin PBXFileReference section */
 		2B461DE31C97CD4100F72757 /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
 		2B8CC6D61C96DCF100B2CE0A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = SOURCE_ROOT; };
-		2BE1DB191CC5066F00BF5A29 /* libBJNotificationSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBJNotificationSDK.a; sourceTree = "<group>"; };
+		2BE1DB1B1CC5218500BF5A29 /* libBJNotificationSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBJNotificationSDK.a; sourceTree = "<group>"; };
 		7860A2FC1BF3058000D5E8A2 /* FirstPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstPageController.h; sourceTree = "<group>"; };
 		7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstPageController.m; sourceTree = "<group>"; };
 		7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondPageViewController.h; sourceTree = "<group>"; };
@@ -55,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BE1DB1A1CC5066F00BF5A29 /* libBJNotificationSDK.a in Frameworks */,
+				2BE1DB1C1CC5218500BF5A29 /* libBJNotificationSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +97,7 @@
 				7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */,
 				7860A3001BF305B100D5E8A2 /* SecondPageViewController.m */,
 				2B461DE31C97CD4100F72757 /* BJNotification.h */,
-				2BE1DB191CC5066F00BF5A29 /* libBJNotificationSDK.a */,
+				2BE1DB1B1CC5218500BF5A29 /* libBJNotificationSDK.a */,
 				78773D931BDDF8FF0018EC6E /* Main.storyboard */,
 				78773D961BDDF8FF0018EC6E /* Images.xcassets */,
 				78773D981BDDF8FF0018EC6E /* LaunchScreen.xib */,

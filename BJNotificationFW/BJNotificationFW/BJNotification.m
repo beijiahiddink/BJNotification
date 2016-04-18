@@ -202,6 +202,8 @@
                     [self.notificationObserverArray removeObjectAtIndex:idx];
                 } else if ((message.name && message.object) && ([listenInfo.name isEqualToString:message.name]) && (listenInfo.object == message.object)) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
+                } else if (!message.name && !message.object) {
+                    [self.notificationObserverArray removeObjectAtIndex:idx];
                 }
             }
         } else {
