@@ -22,8 +22,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"FirstPage";
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip1:) name:@"TipNotification" object:nil];
-    self.tipLabel.text = @"静夜思";
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveText:) name:@"TextNotification" object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"TextNotification" object:textAction()];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -31,7 +35,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)receiveTip1:(BJNotification *)notification {
+- (void)receiveText:(BJNotification *)notification {
     self.tipLabel.text = notification.object;
 }
 

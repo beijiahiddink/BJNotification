@@ -10,4 +10,6 @@
 
 @interface FirstPageController : UIViewController
 
+extern NSString *textAction();
+
 @end

@@ -22,16 +22,16 @@
     NSLog(@"SecondPageViewController dealloc");
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"SecondPage";
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:nil];
-    self.tipLabel.text = @"静夜思";
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveText:) name:@"TextNotification" object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"TextNotification" object:textAction()];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,14 +40,13 @@
 }
 
 - (IBAction)postNotificationEvent:(UIButton *)sender {
-    NSArray *array = @[@"窗前明月光",@"疑是地上霜",@"举头望明月",@"低头思故乡"];
-    int index = arc4random() % array.count;
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"TipNotification" object:array[index]];
+    [[BJNotificationCenter defaultCenter] postNotificationName:@"TextNotification" object:textAction()];
 }
 
-- (void)receiveTip:(BJNotification *)notification {
+- (void)receiveText:(BJNotification *)notification {
     self.tipLabel.text = notification.object;
 }
 
-
 @end
+
+

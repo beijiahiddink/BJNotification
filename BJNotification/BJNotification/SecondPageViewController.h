@@ -10,4 +10,6 @@
 
 @interface SecondPageViewController : UIViewController
 
+extern NSString *textAction();
+
 @end

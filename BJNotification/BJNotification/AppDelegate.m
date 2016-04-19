@@ -8,6 +8,16 @@
 
 #import "AppDelegate.h"
 
+int textIndex = 0;
+
+NSString *textAction() {
+    NSArray *array = @[@"静夜思",@"窗前明月光",@"疑是地上霜",@"举头望明月",@"低头思故乡"];
+    while (textIndex == array.count) {
+        textIndex = 0;
+    }
+    return array[textIndex++];
+}
+
 @interface AppDelegate ()
 
 @end
