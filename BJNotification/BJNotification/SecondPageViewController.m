@@ -26,12 +26,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"SecondPage";
-    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveText:) name:@"TextNotification" object:nil];
+    [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveText:) name:TextNotificationKey object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"TextNotification" object:textAction()];
+    [[BJNotificationCenter defaultCenter] postNotificationName:TextNotificationKey object:textAction()];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -40,7 +40,7 @@
 }
 
 - (IBAction)postNotificationEvent:(UIButton *)sender {
-    [[BJNotificationCenter defaultCenter] postNotificationName:@"TextNotification" object:textAction()];
+    [[BJNotificationCenter defaultCenter] postNotificationName:TextNotificationKey object:textAction()];
 }
 
 - (void)receiveText:(BJNotification *)notification {

@@ -10,6 +10,7 @@
 
 @interface FirstPageController : UIViewController
 
+extern NSString *const TextNotificationKey;
 extern NSString *textAction();
 
 @end

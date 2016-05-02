@@ -38,6 +38,16 @@
                ReferencedContainer = "container:BJNotification.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2BE3E15B1CC9045E00B1B6ED"
+               BuildableName = "BJNotificationFWTests.xctest"
+               BlueprintName = "BJNotificationFWTests"
+               ReferencedContainer = "container:BJNotification.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

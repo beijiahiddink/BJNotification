@@ -7,12 +7,27 @@
 		<key>BJNotificationFW.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
+		</dict>
+		<key>BJNotificationFWTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>2B8B1B581C96BE1A0042CF63</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2BE3E14C1CC9043500B1B6ED</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2BE3E1691CC9048400B1B6ED</key>
 		<dict>
 			<key>primary</key>
 			<true/>

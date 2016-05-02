@@ -10,6 +10,7 @@
 
 @interface SecondPageViewController : UIViewController
 
+extern NSString *const TextNotificationKey;
 extern NSString *textAction();
 
 @end

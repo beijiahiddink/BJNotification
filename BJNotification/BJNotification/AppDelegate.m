@@ -8,22 +8,25 @@
 
 #import "AppDelegate.h"
 
-int textIndex = 0;
+typedef int BJMark;
+static BJMark tIndex;
+
+NSString *const TextNotificationKey = @"TextNotification";
 
 NSString *textAction() {
     NSArray *array = @[@"静夜思",@"窗前明月光",@"疑是地上霜",@"举头望明月",@"低头思故乡"];
-    while (textIndex == array.count) {
-        textIndex = 0;
+    while (tIndex == array.count) {
+        tIndex = 0;
     }
-    return array[textIndex++];
+    return array[tIndex++];
 }
 
 @interface AppDelegate ()
 
+
 @end
 
 @implementation AppDelegate
-
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.

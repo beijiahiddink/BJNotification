@@ -7,8 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2BE1DB181CC5027A00BF5A29 /* BJNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE1DB171CC5027A00BF5A29 /* BJNotification.m */; };
+		2BE3E16D1CC9048400B1B6ED /* BJNotificationFWTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE3E16C1CC9048400B1B6ED /* BJNotificationFWTests.m */; };
+		2BE3E16F1CC9048400B1B6ED /* libBJNotificationFW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B8B1B591C96BE1A0042CF63 /* libBJNotificationFW.a */; };
+		2BE3E17A1CC9171200B1B6ED /* BJNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BE3E1791CC9171200B1B6ED /* BJNotification.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2BE3E1701CC9048400B1B6ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B8B1B511C96BE1A0042CF63 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2B8B1B581C96BE1A0042CF63;
+			remoteInfo = BJNotificationFW;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2B8B1B571C96BE1A0042CF63 /* CopyFiles */ = {
@@ -24,8 +36,11 @@
 
 /* Begin PBXFileReference section */
 		2B8B1B591C96BE1A0042CF63 /* libBJNotificationFW.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBJNotificationFW.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		2BE1DB161CC5027A00BF5A29 /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
-		2BE1DB171CC5027A00BF5A29 /* BJNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BJNotification.m; sourceTree = "<group>"; };
+		2BE3E16A1CC9048400B1B6ED /* BJNotificationFWTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BJNotificationFWTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BE3E16C1CC9048400B1B6ED /* BJNotificationFWTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BJNotificationFWTests.m; sourceTree = "<group>"; };
+		2BE3E16E1CC9048400B1B6ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2BE3E1781CC9171200B1B6ED /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
+		2BE3E1791CC9171200B1B6ED /* BJNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BJNotification.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +51,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2BE3E1671CC9048400B1B6ED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BE3E16F1CC9048400B1B6ED /* libBJNotificationFW.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -43,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				2B8B1B6A1C96CD7A0042CF63 /* BJNotificationFW */,
+				2BE3E16B1CC9048400B1B6ED /* BJNotificationFWTests */,
 				2B8B1B5A1C96BE1A0042CF63 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -51,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				2B8B1B591C96BE1A0042CF63 /* libBJNotificationFW.a */,
+				2BE3E16A1CC9048400B1B6ED /* BJNotificationFWTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -58,10 +83,19 @@
 		2B8B1B6A1C96CD7A0042CF63 /* BJNotificationFW */ = {
 			isa = PBXGroup;
 			children = (
-				2BE1DB161CC5027A00BF5A29 /* BJNotification.h */,
-				2BE1DB171CC5027A00BF5A29 /* BJNotification.m */,
+				2BE3E1781CC9171200B1B6ED /* BJNotification.h */,
+				2BE3E1791CC9171200B1B6ED /* BJNotification.m */,
 			);
 			path = BJNotificationFW;
+			sourceTree = "<group>";
+		};
+		2BE3E16B1CC9048400B1B6ED /* BJNotificationFWTests */ = {
+			isa = PBXGroup;
+			children = (
+				2BE3E16C1CC9048400B1B6ED /* BJNotificationFWTests.m */,
+				2BE3E16E1CC9048400B1B6ED /* Info.plist */,
+			);
+			path = BJNotificationFWTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,6 +118,24 @@
 			productReference = 2B8B1B591C96BE1A0042CF63 /* libBJNotificationFW.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		2BE3E1691CC9048400B1B6ED /* BJNotificationFWTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BE3E1721CC9048400B1B6ED /* Build configuration list for PBXNativeTarget "BJNotificationFWTests" */;
+			buildPhases = (
+				2BE3E1661CC9048400B1B6ED /* Sources */,
+				2BE3E1671CC9048400B1B6ED /* Frameworks */,
+				2BE3E1681CC9048400B1B6ED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2BE3E1711CC9048400B1B6ED /* PBXTargetDependency */,
+			);
+			name = BJNotificationFWTests;
+			productName = BJNotificationFWTests;
+			productReference = 2BE3E16A1CC9048400B1B6ED /* BJNotificationFWTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -94,6 +146,10 @@
 				ORGANIZATIONNAME = beijiahiddink;
 				TargetAttributes = {
 					2B8B1B581C96BE1A0042CF63 = {
+						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = LF99LT2V35;
+					};
+					2BE3E1691CC9048400B1B6ED = {
 						CreatedOnToolsVersion = 7.2.1;
 						DevelopmentTeam = LF99LT2V35;
 					};
@@ -112,20 +168,47 @@
 			projectRoot = "";
 			targets = (
 				2B8B1B581C96BE1A0042CF63 /* BJNotificationFW */,
+				2BE3E1691CC9048400B1B6ED /* BJNotificationFWTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2BE3E1681CC9048400B1B6ED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2B8B1B551C96BE1A0042CF63 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BE1DB181CC5027A00BF5A29 /* BJNotification.m in Sources */,
+				2BE3E17A1CC9171200B1B6ED /* BJNotification.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2BE3E1661CC9048400B1B6ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BE3E16D1CC9048400B1B6ED /* BJNotificationFWTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2BE3E1711CC9048400B1B6ED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2B8B1B581C96BE1A0042CF63 /* BJNotificationFW */;
+			targetProxy = 2BE3E1701CC9048400B1B6ED /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2B8B1B601C96BE1A0042CF63 /* Debug */ = {
@@ -164,7 +247,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -201,7 +284,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -226,6 +309,28 @@
 			};
 			name = Release;
 		};
+		2BE3E1731CC9048400B1B6ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = BJNotificationFWTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.beijiahiddink.BJNotificationFWTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2BE3E1741CC9048400B1B6ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = BJNotificationFWTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.beijiahiddink.BJNotificationFWTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -243,6 +348,15 @@
 			buildConfigurations = (
 				2B8B1B631C96BE1A0042CF63 /* Debug */,
 				2B8B1B641C96BE1A0042CF63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BE3E1721CC9048400B1B6ED /* Build configuration list for PBXNativeTarget "BJNotificationFWTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BE3E1731CC9048400B1B6ED /* Debug */,
+				2BE3E1741CC9048400B1B6ED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
