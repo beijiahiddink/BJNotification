@@ -84,6 +84,7 @@ _Pragma("clang diagnostic pop") \
 @interface BJNotificationCenter ()
 
 @property (nonatomic, strong) NSMutableArray *notificationObserverArray;
+@property (nonatomic, weak) id forwardingTarget;
 
 @end
 
@@ -117,22 +118,23 @@ _Pragma("clang diagnostic pop") \
 
 - (void)postNotification:(BJNotification *)notification {
     NSAssert(notification, @"the notification can not be nil");
-        [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            BJNotificationMessage *listenInfo = obj;
-            if ([notification.name isEqualToString:listenInfo.name]) {
-                if (listenInfo.object) {
-                    if (notification.object == listenInfo.object) {
-                        if ([listenInfo.observer respondsToSelector:listenInfo.selector]) {
-                            SuppressPerformSelectorLeakWarning([listenInfo.observer performSelector:listenInfo.selector withObject:notification]);
-                        }
-                    }
-                } else {
-                    if ([listenInfo.observer respondsToSelector:listenInfo.selector]) {
-                        SuppressPerformSelectorLeakWarning([listenInfo.observer performSelector:listenInfo.selector withObject:notification]);
-                    }
+    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        BJNotificationMessage *listenInfo = obj;
+        if ([notification.name isEqualToString:listenInfo.name]) {
+            if (listenInfo.object) {
+                if (notification.object == listenInfo.object) {
+                    self.forwardingTarget = listenInfo.observer;
+                    NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
+                    SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
                 }
+            } else {
+                self.forwardingTarget = listenInfo.observer;
+                NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
+                SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
             }
-        }];
+        }
+    }];
+    self.forwardingTarget = nil;
 }
 
 - (void)postNotificationName:(NSString *)aName
@@ -170,12 +172,19 @@ _Pragma("clang diagnostic pop") \
     return _notificationObserverArray;
 }
 
+- (id)forwardingTargetForSelector:(SEL)aSelector {
+    if ([self.forwardingTarget respondsToSelector:aSelector]) {
+        return self.forwardingTarget;
+    }
+    return [super forwardingTargetForSelector:aSelector];
+}
+
 - (void)addObserver:(id)observer
            selector:(SEL)aSelector
                name:(NSString *)aName
              object:(nullable id)anObject
       withOperation:(NSOperation *)operation {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.weakObserver = %@ And self.object = %@ And self.name == '%@'",observer, anObject, aName];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.weakObserver = %@ And self.object = %@ And self.name == '%@'", observer, anObject, aName];
     [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         BJNotificationMessage *listenInfo = obj;
         BOOL isSame = [predicate evaluateWithObject:listenInfo];
@@ -191,6 +200,7 @@ _Pragma("clang diagnostic pop") \
     message.object = anObject;
     message.observerAddress = [NSString stringWithFormat:@"%p",message.observer];
     [self.notificationObserverArray addObject:message];
+    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
     NSLog(@"\nadd thead:--%@",[NSThread currentThread]);
 }
 
@@ -204,19 +214,37 @@ _Pragma("clang diagnostic pop") \
             if ([message.observerAddress isEqualToString:[NSString stringWithFormat:@"%p",observer]]) {
                 if ((aName && !anObject) && ([message.name isEqualToString:aName])) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
                 } else if ((!aName && anObject) && (message.object == anObject)) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
                 } else if ((aName && anObject) && ([message.name isEqualToString:aName]) && (message.object == anObject)) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
                 } else if (!aName && !anObject) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
                 }
             }
         } else {
             [self.notificationObserverArray removeObjectAtIndex:idx];
+            [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
         }
     }];
     NSLog(@"\nremove thead:--%@",[NSThread currentThread]);
+}
+
+- (void)testWithObject:(id)object methodName:(NSString *)name {
+    if ([self respondsToSelector:NSSelectorFromString(@"testBlock")]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        id block = [self performSelector:NSSelectorFromString(@"testBlock")];
+#pragma clang diagnostic pop
+        if (block) {
+            void(^BJTestBlock)(id object, NSString *methodName) = block;
+            BJTestBlock(object, name);
+        }
+    }
 }
 
 @end
