@@ -39,7 +39,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="reg-Zi-w9e">
-                                <rect key="frame" x="277.5" y="520" width="45" height="30"/>
+                                <rect key="frame" x="278" y="500" width="45" height="30"/>
                                 <state key="normal" title="下一页"/>
                                 <connections>
                                     <segue destination="4aO-r0-BKN" kind="show" id="bGV-Se-IC3"/>
@@ -51,9 +51,7 @@
                             <constraint firstItem="FeY-pG-DpL" firstAttribute="centerY" secondItem="ggV-xB-hQY" secondAttribute="centerY" id="7K9-A9-efx"/>
                             <constraint firstItem="reg-Zi-w9e" firstAttribute="centerX" secondItem="ggV-xB-hQY" secondAttribute="centerX" id="NMf-dW-uyS"/>
                             <constraint firstItem="FeY-pG-DpL" firstAttribute="centerX" secondItem="ggV-xB-hQY" secondAttribute="centerX" id="g21-U2-RR5"/>
-                            <constraint firstItem="vip-DF-7P2" firstAttribute="top" secondItem="reg-Zi-w9e" secondAttribute="bottom" constant="50" id="uhA-qn-mEu">
-                                <variation key="heightClass=regular-widthClass=compact" constant="90"/>
-                            </constraint>
+                            <constraint firstItem="vip-DF-7P2" firstAttribute="top" secondItem="reg-Zi-w9e" secondAttribute="bottom" constant="50" id="uhA-qn-mEu"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="ysz-k8-DCd"/>
@@ -78,13 +76,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNj-ED-ujA">
-                                <rect key="frame" x="279" y="289" width="42" height="21"/>
+                                <rect key="frame" x="279" y="289" width="42" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ER-I4-bU2">
-                                <rect key="frame" x="270" y="520" width="60" height="30"/>
+                                <rect key="frame" x="270" y="500" width="60" height="30"/>
                                 <state key="normal" title="发送通知"/>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="170" y="680" width="60" height="30"/>
+                                </variation>
                                 <connections>
                                     <action selector="postNotificationEvent:" destination="4aO-r0-BKN" eventType="touchUpInside" id="Zer-ri-mHz"/>
                                 </connections>
@@ -92,9 +93,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="eBW-fc-jws" firstAttribute="top" secondItem="1ER-I4-bU2" secondAttribute="bottom" constant="50" id="GZd-Rn-Xdf">
-                                <variation key="heightClass=regular-widthClass=compact" constant="90"/>
-                            </constraint>
+                            <constraint firstItem="eBW-fc-jws" firstAttribute="top" secondItem="1ER-I4-bU2" secondAttribute="bottom" constant="50" id="GZd-Rn-Xdf"/>
                             <constraint firstItem="PNj-ED-ujA" firstAttribute="centerY" secondItem="aNv-oz-Taa" secondAttribute="centerY" id="RcY-5A-tEq"/>
                             <constraint firstItem="1ER-I4-bU2" firstAttribute="centerX" secondItem="aNv-oz-Taa" secondAttribute="centerX" id="f3K-Nf-r13"/>
                             <constraint firstItem="PNj-ED-ujA" firstAttribute="centerX" secondItem="aNv-oz-Taa" secondAttribute="centerX" id="jmH-06-WLT"/>

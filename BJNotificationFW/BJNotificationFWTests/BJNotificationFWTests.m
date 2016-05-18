@@ -17,7 +17,8 @@ typedef void(^BJTestBlock)(id object, NSString *methodName);
 
 @interface BJNotificationCenter (BJFMTest)
 
-@property (nonatomic, copy) BJTestBlock testBlock;
+- (void)bj_setTestBlock:(BJTestBlock)bj_testBlock;
+- (BJTestBlock)bj_testBlock;
 
 @end
 
@@ -25,11 +26,11 @@ typedef void(^BJTestBlock)(id object, NSString *methodName);
 
 static char testBlockKey;
 
-- (void)setTestBlock:(BJTestBlock)testBlock {
-    objc_setAssociatedObject(self, &testBlockKey, testBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+- (void)bj_setTestBlock:(BJTestBlock)bj_testBlock {
+    objc_setAssociatedObject(self, &testBlockKey, bj_testBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
-- (BJTestBlock)testBlock {
+- (BJTestBlock)bj_testBlock {
     return objc_getAssociatedObject(self, &testBlockKey);
 }
 
@@ -52,7 +53,7 @@ static char testBlockKey;
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    [[BJNotificationCenter defaultCenter] setTestBlock:^(id object, NSString *methodName) {
+    [[BJNotificationCenter defaultCenter] bj_setTestBlock:^(id object, NSString *methodName) {
         NSLog(@"--BJTestBlock--\n%@\n%@",object, methodName);
         NSObject *nobject = object;
         if ([nobject isMemberOfClass:NSClassFromString(@"BJNotificationMessageInfo")]){

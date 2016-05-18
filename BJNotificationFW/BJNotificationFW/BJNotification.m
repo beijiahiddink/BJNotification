@@ -17,6 +17,12 @@ Stuff; \
 _Pragma("clang diagnostic pop") \
 } while (0)
 
+#define BJLog(format, ...) \
+NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+
+#define LogCurrentThread \
+BJLog(@"currentThread-> %@", [NSThread currentThread])
+
 #pragma mark - BJNotificationClass
 
 @implementation BJNotification
@@ -56,7 +62,7 @@ _Pragma("clang diagnostic pop") \
 @interface BJNotificationMessage : NSObject
 
 @property (nonatomic, weak) id observer;
-@property (nonatomic) SEL selector;
+@property (nonatomic, copy) NSString *selectorName;
 @property (nonatomic, copy) NSString *name;
 @property (nullable, nonatomic) id object;
 @property (nonatomic, copy) NSString *observerAddress;
@@ -65,16 +71,8 @@ _Pragma("clang diagnostic pop") \
 
 @implementation BJNotificationMessage
 
-//- (void)dealloc {
-//    NSLog(@"%@",self.debugDescription);
-//}
-
 - (NSString *)debugDescription {
     return [self bj_debugDescription];
-}
-
-- (id)valueForUndefinedKey:(NSString *)key {
-    return @"unknown";
 }
 
 @end
@@ -124,13 +122,15 @@ _Pragma("clang diagnostic pop") \
             if (listenInfo.object) {
                 if (notification.object == listenInfo.object) {
                     self.forwardingTarget = listenInfo.observer;
-                    NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
-                    SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
+                    SEL selector = NSSelectorFromString(listenInfo.selectorName);
+                    NSAssert(![self respondsToSelector:selector], @"have same method in BJNotification");
+                    SuppressPerformSelectorLeakWarning([self performSelector:selector withObject:notification]);
                 }
             } else {
                 self.forwardingTarget = listenInfo.observer;
-                NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
-                SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
+                SEL selector = NSSelectorFromString(listenInfo.selectorName);
+                NSAssert(![self respondsToSelector:selector], @"have same method in BJNotification");
+                SuppressPerformSelectorLeakWarning([self performSelector:selector withObject:notification]);
             }
         }
     }];
@@ -159,6 +159,7 @@ _Pragma("clang diagnostic pop") \
     __weak __typeof(anOperation) weakOperation = anOperation;
     [anOperation addExecutionBlock:^{
         [self removeObserver:observer name:aName object:anObject withOperation:weakOperation];
+        LogCurrentThread;
     }];
     [anOperation start];
 }
@@ -196,12 +197,13 @@ _Pragma("clang diagnostic pop") \
     BJNotificationMessage *message = [[BJNotificationMessage alloc] init];
     message.observer = observer;
     message.name = aName;
-    message.selector = aSelector;
+    message.selectorName = NSStringFromSelector(aSelector);
     message.object = anObject;
     message.observerAddress = [NSString stringWithFormat:@"%p",message.observer];
     [self.notificationObserverArray addObject:message];
-    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
-    NSLog(@"\nadd thead:--%@",[NSThread currentThread]);
+    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
+    BJLog(@"\nadd thead:--%@",[NSThread currentThread]);
+    
 }
 
 - (void)removeObserver:(id)observer
@@ -214,37 +216,39 @@ _Pragma("clang diagnostic pop") \
             if ([message.observerAddress isEqualToString:[NSString stringWithFormat:@"%p",observer]]) {
                 if ((aName && !anObject) && ([message.name isEqualToString:aName])) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
                 } else if ((!aName && anObject) && (message.object == anObject)) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
                 } else if ((aName && anObject) && ([message.name isEqualToString:aName]) && (message.object == anObject)) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
                 } else if (!aName && !anObject) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
+                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
                 }
             }
         } else {
             [self.notificationObserverArray removeObjectAtIndex:idx];
-            [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __func__]];
+            [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
         }
     }];
-    NSLog(@"\nremove thead:--%@",[NSThread currentThread]);
+    BJLog(@"\nremove thead:--%@",[NSThread currentThread]);
 }
 
 - (void)testWithObject:(id)object methodName:(NSString *)name {
+#ifdef DEBUG
     if ([self respondsToSelector:NSSelectorFromString(@"testBlock")]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        id block = [self performSelector:NSSelectorFromString(@"testBlock")];
+        id block = [self performSelector:NSSelectorFromString(@"bj_testBlock")];
 #pragma clang diagnostic pop
         if (block) {
-            void(^BJTestBlock)(id object, NSString *methodName) = block;
+            void(^BJTestBlock)() = block;
             BJTestBlock(object, name);
         }
     }
+#endif
 }
 
 @end
@@ -257,7 +261,7 @@ _Pragma("clang diagnostic pop") \
 
 - (NSString *)bj_debugDescription {
     NSMutableString *description = [[NSMutableString alloc] init];
-    [description appendFormat:@"*****%s*****\n<%@: %p>\n",__func__,[self class],self];
+    [description appendFormat:@"*****%s*****\n<%@: %p>\n",__FUNCTION__, [self class], self];
     unsigned int count;
     objc_property_t *propertyList = class_copyPropertyList([self class], &count);
     for (int i = 0; i < count; i++) {
@@ -267,7 +271,7 @@ _Pragma("clang diagnostic pop") \
         if (i == 0) {
             [description appendFormat:@"{\n"];
         }
-        [description appendFormat:@"\t%@: %p",propertyName,[self valueForKey:propertyName]];
+        [description appendFormat:@"\t%@: %p",propertyName, [self valueForKey:propertyName]];
         if (i == count - 1) {
             [description appendFormat:@"\n}"];
         } else {
