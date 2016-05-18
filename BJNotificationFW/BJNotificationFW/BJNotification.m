@@ -20,8 +20,6 @@ _Pragma("clang diagnostic pop") \
 #define BJLog(format, ...) \
 NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
-#define LogCurrentThread \
-BJLog(@"currentThread-> %@", [NSThread currentThread])
 
 #pragma mark - BJNotificationClass
 
@@ -62,7 +60,7 @@ BJLog(@"currentThread-> %@", [NSThread currentThread])
 @interface BJNotificationMessage : NSObject
 
 @property (nonatomic, weak) id observer;
-@property (nonatomic, copy) NSString *selectorName;
+@property (nonatomic) SEL selector;
 @property (nonatomic, copy) NSString *name;
 @property (nullable, nonatomic) id object;
 @property (nonatomic, copy) NSString *observerAddress;
@@ -73,6 +71,13 @@ BJLog(@"currentThread-> %@", [NSThread currentThread])
 
 - (NSString *)debugDescription {
     return [self bj_debugDescription];
+}
+
+- (id)valueForUndefinedKey:(NSString *)key {
+    if ([key isEqualToString:@"selector"]) {
+        return nil;
+    }
+    return @"unknown";
 }
 
 @end
@@ -122,15 +127,13 @@ BJLog(@"currentThread-> %@", [NSThread currentThread])
             if (listenInfo.object) {
                 if (notification.object == listenInfo.object) {
                     self.forwardingTarget = listenInfo.observer;
-                    SEL selector = NSSelectorFromString(listenInfo.selectorName);
-                    NSAssert(![self respondsToSelector:selector], @"have same method in BJNotification");
-                    SuppressPerformSelectorLeakWarning([self performSelector:selector withObject:notification]);
+                    NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
+                    SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
                 }
             } else {
                 self.forwardingTarget = listenInfo.observer;
-                SEL selector = NSSelectorFromString(listenInfo.selectorName);
-                NSAssert(![self respondsToSelector:selector], @"have same method in BJNotification");
-                SuppressPerformSelectorLeakWarning([self performSelector:selector withObject:notification]);
+                NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
+                SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
             }
         }
     }];
@@ -159,7 +162,6 @@ BJLog(@"currentThread-> %@", [NSThread currentThread])
     __weak __typeof(anOperation) weakOperation = anOperation;
     [anOperation addExecutionBlock:^{
         [self removeObserver:observer name:aName object:anObject withOperation:weakOperation];
-        LogCurrentThread;
     }];
     [anOperation start];
 }
@@ -197,12 +199,12 @@ BJLog(@"currentThread-> %@", [NSThread currentThread])
     BJNotificationMessage *message = [[BJNotificationMessage alloc] init];
     message.observer = observer;
     message.name = aName;
-    message.selectorName = NSStringFromSelector(aSelector);
+    message.selector = aSelector;
     message.object = anObject;
     message.observerAddress = [NSString stringWithFormat:@"%p",message.observer];
     [self.notificationObserverArray addObject:message];
-    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
-    BJLog(@"\nadd thead:--%@",[NSThread currentThread]);
+    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
+//    BJLog(@"\nadd thead:--%@",[NSThread currentThread]);
     
 }
 
@@ -216,29 +218,29 @@ BJLog(@"currentThread-> %@", [NSThread currentThread])
             if ([message.observerAddress isEqualToString:[NSString stringWithFormat:@"%p",observer]]) {
                 if ((aName && !anObject) && ([message.name isEqualToString:aName])) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
+                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
                 } else if ((!aName && anObject) && (message.object == anObject)) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
+                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
                 } else if ((aName && anObject) && ([message.name isEqualToString:aName]) && (message.object == anObject)) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
+                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
                 } else if (!aName && !anObject) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
+                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
                 }
             }
         } else {
             [self.notificationObserverArray removeObjectAtIndex:idx];
-            [self testWithObject:message methodName:[NSString stringWithFormat:@"%s", __FUNCTION__]];
+            [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
         }
     }];
-    BJLog(@"\nremove thead:--%@",[NSThread currentThread]);
+//    BJLog(@"\nremove thead:--%@",[NSThread currentThread]);
 }
 
 - (void)testWithObject:(id)object methodName:(NSString *)name {
 #ifdef DEBUG
-    if ([self respondsToSelector:NSSelectorFromString(@"testBlock")]) {
+    if ([self respondsToSelector:NSSelectorFromString(@"bj_testBlock")]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         id block = [self performSelector:NSSelectorFromString(@"bj_testBlock")];
@@ -271,7 +273,11 @@ BJLog(@"currentThread-> %@", [NSThread currentThread])
         if (i == 0) {
             [description appendFormat:@"{\n"];
         }
+#if OutputDebugDescription
+        [description appendFormat:@"\t%@: %@",propertyName, [self valueForKey:propertyName]];
+#else
         [description appendFormat:@"\t%@: %p",propertyName, [self valueForKey:propertyName]];
+#endif
         if (i == count - 1) {
             [description appendFormat:@"\n}"];
         } else {

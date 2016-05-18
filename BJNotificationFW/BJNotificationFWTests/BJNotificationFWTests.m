@@ -53,11 +53,13 @@ static char testBlockKey;
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+//#warning TODO:
     [[BJNotificationCenter defaultCenter] bj_setTestBlock:^(id object, NSString *methodName) {
         NSLog(@"--BJTestBlock--\n%@\n%@",object, methodName);
         NSObject *nobject = object;
-        if ([nobject isMemberOfClass:NSClassFromString(@"BJNotificationMessageInfo")]){
-            NSLog(@"%@\n    self: %p",nobject.debugDescription, self);
+        if ([nobject isMemberOfClass:NSClassFromString(@"BJNotificationMessage")]){
+            NSLog(@"%@",nobject.debugDescription);
+  
         }
     }];
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationTest:) name:NotificationTestKey object:nil];
@@ -84,17 +86,12 @@ static char testBlockKey;
 
 
 - (void)testPostNotification {
-    self.expectation = [self expectationWithDescription:@"testPostNotification"];
     [[BJNotificationCenter defaultCenter] postNotificationName:NotificationTestKey object:@"demo"];
-    [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-        
-    }];
 }
 
 - (void)notificationTest:(BJNotification *)notification {
     NSString *str = notification.object;
     XCTAssertTrue([str isEqualToString:@"demo"], @"发送通知出现错误");
-    [self.expectation fulfill];
 }
 
 

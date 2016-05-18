@@ -117,6 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+#define OutputDebugDescription   0 //真则打印对象，假则打印指针
 
 @interface NSObject (BJDebugDescription)
 
