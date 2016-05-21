@@ -59,7 +59,6 @@ static char testBlockKey;
         NSObject *nobject = object;
         if ([nobject isMemberOfClass:NSClassFromString(@"BJNotificationMessage")]){
             NSLog(@"%@",nobject.debugDescription);
-  
         }
     }];
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationTest:) name:NotificationTestKey object:nil];

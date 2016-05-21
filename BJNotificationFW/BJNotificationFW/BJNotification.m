@@ -63,7 +63,7 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 @property (nonatomic) SEL selector;
 @property (nonatomic, copy) NSString *name;
 @property (nullable, nonatomic) id object;
-@property (nonatomic, copy) NSString *observerAddress;
+@property (nonatomic, copy) NSString *observerIdentifier;
 
 @end
 
@@ -99,7 +99,7 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
     static BJNotificationCenter *center = nil;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        center = [[BJNotificationCenter alloc] init];
+        center = [BJNotificationCenter new];
     });
     return center;
 }
@@ -111,7 +111,7 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
     NSAssert(observer, @"the observer can not be nil");
     NSAssert(aSelector, @"the selector can not be nil");
     NSAssert(aName, @"the name can not be nil");
-    NSBlockOperation *anOperation = [[NSBlockOperation alloc] init];
+    NSBlockOperation *anOperation = [NSBlockOperation new];
     __weak __typeof(anOperation) weakOperation = anOperation;
     [anOperation addExecutionBlock:^{
         [self addObserver:observer selector:aSelector name:aName object:anObject withOperation:weakOperation];
@@ -121,23 +121,26 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 
 - (void)postNotification:(BJNotification *)notification {
     NSAssert(notification, @"the notification can not be nil");
-    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BJNotificationMessage *listenInfo = obj;
-        if ([notification.name isEqualToString:listenInfo.name]) {
-            if (listenInfo.object) {
-                if (notification.object == listenInfo.object) {
+    NSBlockOperation *anOperation = [NSBlockOperation new];
+    [anOperation addExecutionBlock:^{
+        [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            BJNotificationMessage *listenInfo = obj;
+            if ([notification.name isEqualToString:listenInfo.name]) {
+                if (listenInfo.object) {
+                    if (notification.object == listenInfo.object) {
+                        self.forwardingTarget = listenInfo.observer;
+                        NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotificationCenter");
+                        SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
+                    }
+                } else {
                     self.forwardingTarget = listenInfo.observer;
-                    NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
+                    NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotificationCenter");
                     SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
                 }
-            } else {
-                self.forwardingTarget = listenInfo.observer;
-                NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotification");
-                SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
             }
-        }
+        }];
     }];
-    self.forwardingTarget = nil;
+    [anOperation start];
 }
 
 - (void)postNotificationName:(NSString *)aName
@@ -158,7 +161,7 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
     if (!self.notificationObserverArray.count) {
         return;
     }
-    NSBlockOperation *anOperation = [[NSBlockOperation alloc] init];
+    NSBlockOperation *anOperation = [NSBlockOperation new];
     __weak __typeof(anOperation) weakOperation = anOperation;
     [anOperation addExecutionBlock:^{
         [self removeObserver:observer name:aName object:anObject withOperation:weakOperation];
@@ -170,14 +173,16 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 
 - (NSMutableArray *)notificationObserverArray {
     if (!_notificationObserverArray) {
-        _notificationObserverArray = [NSMutableArray array];
+        _notificationObserverArray = [NSMutableArray new];
     }
     return _notificationObserverArray;
 }
 
 - (id)forwardingTargetForSelector:(SEL)aSelector {
-    if ([self.forwardingTarget respondsToSelector:aSelector]) {
-        return self.forwardingTarget;
+    id target = self.forwardingTarget;
+    self.forwardingTarget = nil;
+    if ([target respondsToSelector:aSelector]) {
+        return target;
     }
     return [super forwardingTargetForSelector:aSelector];
 }
@@ -196,16 +201,15 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
             *stop = YES;
         }
     }];
-    BJNotificationMessage *message = [[BJNotificationMessage alloc] init];
+    BJNotificationMessage *message = [BJNotificationMessage new];
     message.observer = observer;
     message.name = aName;
     message.selector = aSelector;
     message.object = anObject;
-    message.observerAddress = [NSString stringWithFormat:@"%p",message.observer];
+    message.observerIdentifier = [NSString stringWithFormat:@"%p", message.observer];
     [self.notificationObserverArray addObject:message];
     [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
 //    BJLog(@"\nadd thead:--%@",[NSThread currentThread]);
-    
 }
 
 - (void)removeObserver:(id)observer
@@ -215,7 +219,7 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
     [self.notificationObserverArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         BJNotificationMessage *message = obj;
         if (message.observer) {
-            if ([message.observerAddress isEqualToString:[NSString stringWithFormat:@"%p",observer]]) {
+            if ([message.observerIdentifier isEqualToString:[NSString stringWithFormat:@"%p", observer]]) {
                 if ((aName && !anObject) && ([message.name isEqualToString:aName])) {
                     [self.notificationObserverArray removeObjectAtIndex:idx];
                     [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
@@ -262,8 +266,8 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 #pragma mark - Public Method
 
 - (NSString *)bj_debugDescription {
-    NSMutableString *description = [[NSMutableString alloc] init];
-    [description appendFormat:@"*****%s*****\n<%@: %p>\n",__FUNCTION__, [self class], self];
+    NSMutableString *description = [NSMutableString new];
+    [description appendFormat:@"*****%s*****\n<%@: %p>\n", __FUNCTION__, [self class], self];
     unsigned int count;
     objc_property_t *propertyList = class_copyPropertyList([self class], &count);
     for (int i = 0; i < count; i++) {
@@ -274,9 +278,9 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
             [description appendFormat:@"{\n"];
         }
 #if OutputDebugDescription
-        [description appendFormat:@"\t%@: %@",propertyName, [self valueForKey:propertyName]];
+        [description appendFormat:@"\t%@: %@", propertyName, [self valueForKey:propertyName]];
 #else
-        [description appendFormat:@"\t%@: %p",propertyName, [self valueForKey:propertyName]];
+        [description appendFormat:@"\t%@: %p", propertyName, [self valueForKey:propertyName]];
 #endif
         if (i == count - 1) {
             [description appendFormat:@"\n}"];
