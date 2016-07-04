@@ -29,14 +29,12 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 
 + (instancetype)notificationWithName:(NSString *)aName
                               object:(nullable id)anObject {
-    NSAssert(aName, @"the name can not be nil");
     return [[self alloc] initWithName:aName object:anObject userInfo:nil];
 }
 
 + (instancetype)notificationWithName:(NSString *)aName
                               object:(nullable id)anObject
                             userInfo:(nullable NSDictionary *)aUserInfo {
-    NSAssert(aName, @"the name can not be nil");
     return [[self alloc] initWithName:aName object:anObject userInfo:aUserInfo];
 }
 
@@ -95,11 +93,11 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 
 #pragma mark - Public Method
 
-+ (BJNotificationCenter *)defaultCenter {
-    static BJNotificationCenter *center = nil;
++ (instancetype)defaultCenter {
+    static id center = nil;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
-        center = [BJNotificationCenter new];
+        center = [self new];
     });
     return center;
 }
@@ -145,7 +143,6 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 
 - (void)postNotificationName:(NSString *)aName
                       object:(nullable id)anObject {
-    NSAssert(aName, @"the name can not be nil");
     BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
     [self postNotification:bjNotification];
 }
@@ -179,7 +176,7 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 }
 
 - (id)forwardingTargetForSelector:(SEL)aSelector {
-    id target = self.forwardingTarget;
+    id target = _forwardingTarget;
     self.forwardingTarget = nil;
     if ([target respondsToSelector:aSelector]) {
         return target;

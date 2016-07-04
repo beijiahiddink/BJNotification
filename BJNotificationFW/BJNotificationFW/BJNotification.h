@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return 返回通知中心实例
  */
-+ (BJNotificationCenter *)defaultCenter;
++ (instancetype)defaultCenter;
 
 /**
  *  注册通知

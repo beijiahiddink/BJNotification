@@ -32,6 +32,9 @@
 		2B8CC6D61C96DCF100B2CE0A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = SOURCE_ROOT; };
 		2BD8C5121CD3D30A0047C934 /* BJNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BJNotification.h; sourceTree = "<group>"; };
 		2BE27ABC1CEE6EE30045F891 /* libBJNotificationSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBJNotificationSDK.a; sourceTree = "<group>"; };
+		2BF9731B1CF0388E00B91905 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		2BF9731C1CF038C700B91905 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		2BF9731D1CF038C700B91905 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		7860A2FC1BF3058000D5E8A2 /* FirstPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstPageController.h; sourceTree = "<group>"; };
 		7860A2FD1BF3058000D5E8A2 /* FirstPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstPageController.m; sourceTree = "<group>"; };
 		7860A2FF1BF305B100D5E8A2 /* SecondPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecondPageViewController.h; sourceTree = "<group>"; };
@@ -264,6 +267,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				78773D941BDDF8FF0018EC6E /* Base */,
+				2BF9731B1CF0388E00B91905 /* en */,
+				2BF9731C1CF038C700B91905 /* zh-Hans */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -272,6 +277,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				78773D991BDDF8FF0018EC6E /* Base */,
+				2BF9731D1CF038C700B91905 /* zh-Hans */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";

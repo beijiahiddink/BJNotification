@@ -1,6 +1,6 @@
 
-/* Class = "UIButton"; normalTitle = "发送通知"; ObjectID = "1ER-I4-bU2"; */
-"1ER-I4-bU2.normalTitle" = "发送通知";
+/* Class = "UIButton"; normalTitle = "Send Message"; ObjectID = "1ER-I4-bU2"; */
+"1ER-I4-bU2.normalTitle" = "Send Message";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "FeY-pG-DpL"; */
 "FeY-pG-DpL.text" = "Label";
@@ -8,5 +8,5 @@
 /* Class = "UILabel"; text = "Label"; ObjectID = "PNj-ED-ujA"; */
 "PNj-ED-ujA.text" = "Label";
 
-/* Class = "UIButton"; normalTitle = "下一页"; ObjectID = "reg-Zi-w9e"; */
-"reg-Zi-w9e.normalTitle" = "下一页";
+/* Class = "UIButton"; normalTitle = "Next Page"; ObjectID = "reg-Zi-w9e"; */
+"reg-Zi-w9e.normalTitle" = "Next Page";

@@ -17,6 +17,8 @@ typedef void(^BJTestBlock)(id object, NSString *methodName);
 
 @interface BJNotificationCenter (BJFMTest)
 
+@property (nonatomic, strong) NSMutableArray *notificationObserverArray;
+
 - (void)bj_setTestBlock:(BJTestBlock)bj_testBlock;
 - (BJTestBlock)bj_testBlock;
 
@@ -24,14 +26,16 @@ typedef void(^BJTestBlock)(id object, NSString *methodName);
 
 @implementation BJNotificationCenter (BJFMTest)
 
-static char testBlockKey;
+@dynamic notificationObserverArray;
+
+static char ktestBlockKey;
 
 - (void)bj_setTestBlock:(BJTestBlock)bj_testBlock {
-    objc_setAssociatedObject(self, &testBlockKey, bj_testBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    objc_setAssociatedObject(self, &ktestBlockKey, bj_testBlock, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (BJTestBlock)bj_testBlock {
-    return objc_getAssociatedObject(self, &testBlockKey);
+    return objc_getAssociatedObject(self, &ktestBlockKey);
 }
 
 @end
@@ -46,7 +50,7 @@ static char testBlockKey;
 
 + (void)initialize {
     if (self == [BJNotificationFWTests class]) {
-        observerArray = [[BJNotificationCenter defaultCenter] valueForKey:@"notificationObserverArray"];
+        observerArray = [[BJNotificationCenter defaultCenter] notificationObserverArray];
     }
 }
 
