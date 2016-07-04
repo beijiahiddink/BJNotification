@@ -1,7 +1,8 @@
 ##BJNotification                        
-![build](https://img.shields.io/badge/iOS-7.0-yellow.svg?)           
-![version](https://img.shields.io/badge/version-v1.0-blue.svg?)
-[![weibo](https://img.shields.io/badge/weibo-@beijiahiddink-green.svg?)](http://weibo.com/u/3788698095)
+![build](https://img.shields.io/badge/iOS-7.0-yellow.svg)           
+![version](https://img.shields.io/badge/version-v1.0-blue.svg)
+[![weibo](https://img.shields.io/badge/weibo-@beijiahiddink-green.svg)](http://weibo.com/u/3788698095)
+[![mail](https://img.shields.io/badge/mail-@beijiahiddink-pink.svg)](mailto://wangxu@beijiahiddink.com)
 
 ###什么是BJNotification
 本项目高仿NSNotification框架。
