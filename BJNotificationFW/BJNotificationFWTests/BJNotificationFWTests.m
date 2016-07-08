@@ -1,9 +1,12 @@
 //
 //  BJNotificationFWTests.m
-//  BJNotificationFWTests
+//  BJNotificationFWTests <https://github.com/beijiahiddink/BJNotification>
 //
-//  Created by 王旭 on 15/11/21.
+//  Created by WangXu on 15/11/21.
 //  Copyright © 2015年 beijiahiddink. All rights reserved.
+//
+//  For the full copyright and license information, please view the README
+//  file that was distributed with this source code.
 //
 
 #import <XCTest/XCTest.h>
@@ -17,16 +20,12 @@ typedef void(^BJTestBlock)(id object, NSString *methodName);
 
 @interface BJNotificationCenter (BJFMTest)
 
-@property (nonatomic, strong) NSMutableArray *notificationObserverArray;
-
 - (void)bj_setTestBlock:(BJTestBlock)bj_testBlock;
 - (BJTestBlock)bj_testBlock;
 
 @end
 
 @implementation BJNotificationCenter (BJFMTest)
-
-@dynamic notificationObserverArray;
 
 static char ktestBlockKey;
 
@@ -50,7 +49,7 @@ static char ktestBlockKey;
 
 + (void)initialize {
     if (self == [BJNotificationFWTests class]) {
-        observerArray = [[BJNotificationCenter defaultCenter] notificationObserverArray];
+        observerArray = [[BJNotificationCenter defaultCenter] valueForKey:@"notificationObserverArray"];
     }
 }
 
@@ -61,7 +60,7 @@ static char ktestBlockKey;
     [[BJNotificationCenter defaultCenter] bj_setTestBlock:^(id object, NSString *methodName) {
         NSLog(@"--BJTestBlock--\n%@\n%@",object, methodName);
         NSObject *nobject = object;
-        if ([nobject isMemberOfClass:NSClassFromString(@"BJNotificationMessage")]){
+        if ([nobject isMemberOfClass:NSClassFromString(@"BJNotificationElement")]){
             NSLog(@"%@",nobject.debugDescription);
         }
     }];

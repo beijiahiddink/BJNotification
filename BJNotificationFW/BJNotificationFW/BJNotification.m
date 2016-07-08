@@ -1,9 +1,12 @@
 //
 //  BJNotification.m
-//  BJNotification
+//  BJNotification <https://github.com/beijiahiddink/BJNotification>
 //
 //  Created by WangXu on 15/10/26.
 //  Copyright (c) 2015年 beijiahiddink. All rights reserved.
+//
+//  For the full copyright and license information, please view the README
+//  file that was distributed with this source code.
 //
 
 #import "BJNotification.h"
@@ -20,12 +23,11 @@ _Pragma("clang diagnostic pop") \
 #define BJLog(format, ...) \
 NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
+NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - BJNotificationClass
 
 @implementation BJNotification
-
-#pragma mark - Public Method
 
 + (instancetype)notificationWithName:(NSString *)aName
                               object:(nullable id)anObject {
@@ -51,47 +53,142 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
     return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone {
+    return [[BJNotification allocWithZone:zone] initWithName:_name object:_object userInfo:_userInfo];
+}
+
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        _name = [aDecoder decodeObjectForKey:@"name"];
+        _object = [aDecoder decodeObjectForKey:@"object"];
+        _userInfo = [aDecoder decodeObjectForKey:@"userInfo"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:_name forKey:@"name"];
+    [aCoder encodeObject:_object forKey:@"object"];
+    [aCoder encodeObject:_userInfo forKey:@"userInfo"];
+}
+
 @end
 
-#pragma mark - BJNotificationMessageClass
+#pragma mark - BJNotificationElementClass
 
-@interface BJNotificationMessage : NSObject
+@interface _BJNotificationElement : NSObject {
+    @package
+    __unsafe_unretained id _observer;
+    NSValue *_selector;
+    NSString *_name;
+    id _object;
+    NSString *_observerIdentifier;
+}
 
-@property (nonatomic, weak) id observer;
-@property (nonatomic) SEL selector;
-@property (nonatomic, copy) NSString *name;
-@property (nullable, nonatomic) id object;
-@property (nonatomic, copy) NSString *observerIdentifier;
++ (instancetype)elementWithObserver:(id)observer
+                           selector:(SEL)selector
+                               name:(nullable NSString *)name
+                             object:(nullable id)object;
+
++ (instancetype)elementWithObserverIdentifier:(NSString *)identifier
+                                         name:(nullable NSString *)name
+                                       object:(nullable id)object;
+
+- (instancetype)initWithObserver:(id)observer
+                        selector:(SEL)selector
+                            name:(nullable NSString *)name
+                          object:(nullable id)object;
+
+- (instancetype)initWithObserverIdentifier:(NSString *)identifier
+                                      name:(nullable NSString *)name
+                                    object:(nullable id)object;
+
+- (BOOL)canRemoveFromContainer:(id)object;
 
 @end
 
-@implementation BJNotificationMessage
+@implementation _BJNotificationElement
+
++ (instancetype)elementWithObserver:(id)observer
+                           selector:(SEL)selector
+                               name:(nullable NSString *)name
+                             object:(nullable id)object {
+    return [[self alloc] initWithObserver:observer selector:selector name:name object:object];
+}
+
++ (instancetype)elementWithObserverIdentifier:(NSString *)identifier
+                                         name:(nullable NSString *)name
+                                       object:(nullable id)object{
+    return [[self alloc] initWithObserverIdentifier:identifier name:name object:object];
+}
+
+- (instancetype)initWithObserver:(id)observer
+                        selector:(SEL)selector
+                            name:(nullable NSString *)name
+                          object:(nullable id)object {
+    self = [super init];
+    if (self) {
+        _observer = observer;
+        _selector = [NSValue value:&selector withObjCType:@encode(SEL)];
+        _name = name;
+        _object = object;
+        _observerIdentifier = [NSString stringWithFormat:@"%p", observer];
+    }
+    return self;
+}
+
+- (instancetype)initWithObserverIdentifier:(NSString *)identifier
+                                      name:(nullable NSString *)name
+                                    object:(nullable id)object {
+    self = [super init];
+    if (self) {
+        _observerIdentifier = identifier;
+        _name = name;
+        _object = object;
+    }
+    return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if ([object isKindOfClass:[_BJNotificationElement class]]) {
+        _BJNotificationElement *temp = object;
+        if (temp->_observer == _observer && temp->_object == _object && [temp->_name isEqualToString:_name]) return YES;
+        else return NO;
+    }
+    return [super isEqual:object];
+}
+
+- (BOOL)canRemoveFromContainer:(id)object {
+    if (!_observer || ![object isMemberOfClass:[_BJNotificationElement class]]) return YES;
+     _BJNotificationElement *temp = object;
+    
+    if ([_observerIdentifier isEqualToString:temp->_observerIdentifier]) {
+        if ((temp->_name && !temp->_object) && ([_name isEqualToString:temp->_name])) return YES;
+        else if ((!temp->_name && temp->_object) && (_object == temp->_object)) return YES;
+        else if ((temp->_name && temp->_object) && ([_name isEqualToString:temp->_name]) && (_object == temp->_object)) return YES;
+        else if (!temp->_name && !temp->_object) return YES;
+    }
+    return NO;
+}
 
 - (NSString *)debugDescription {
     return [self bj_debugDescription];
-}
-
-- (id)valueForUndefinedKey:(NSString *)key {
-    if ([key isEqualToString:@"selector"]) {
-        return nil;
-    }
-    return @"unknown";
 }
 
 @end
 
 #pragma mark - BJNotificationCenterClass
 
-@interface BJNotificationCenter ()
-
-@property (nonatomic, strong) NSMutableArray *notificationObserverArray;
-@property (nonatomic, weak) id forwardingTarget;
+@interface BJNotificationCenter () {
+    NSMutableArray *_notificationObserverArray;
+    dispatch_queue_t _queue;
+   __unsafe_unretained id _forwardingTarget;
+}
 
 @end
 
 @implementation BJNotificationCenter
-
-#pragma mark - Public Method
 
 + (instancetype)defaultCenter {
     static id center = nil;
@@ -102,49 +199,71 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
     return center;
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _queue = dispatch_queue_create("com.beijiahiddink.BJNotificationCenter", DISPATCH_QUEUE_SERIAL);
+        _notificationObserverArray = [NSMutableArray new];
+    }
+    return self;
+}
+
 - (void)addObserver:(id)observer
            selector:(SEL)aSelector
                name:(NSString *)aName
              object:(nullable id)anObject {
-    NSAssert(observer, @"the observer can not be nil");
-    NSAssert(aSelector, @"the selector can not be nil");
-    NSAssert(aName, @"the name can not be nil");
-    NSBlockOperation *anOperation = [NSBlockOperation new];
-    __weak __typeof(anOperation) weakOperation = anOperation;
-    [anOperation addExecutionBlock:^{
-        [self addObserver:observer selector:aSelector name:aName object:anObject withOperation:weakOperation];
-    }];
-    [anOperation start];
+    dispatch_sync(_queue, ^{
+        [self _addObserver:observer selector:aSelector name:aName object:anObject];
+    });
 }
 
-- (void)postNotification:(BJNotification *)notification {
-    NSAssert(notification, @"the notification can not be nil");
-    NSBlockOperation *anOperation = [NSBlockOperation new];
-    [anOperation addExecutionBlock:^{
-        [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            BJNotificationMessage *listenInfo = obj;
-            if ([notification.name isEqualToString:listenInfo.name]) {
-                if (listenInfo.object) {
-                    if (notification.object == listenInfo.object) {
-                        self.forwardingTarget = listenInfo.observer;
-                        NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotificationCenter");
-                        SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
-                    }
-                } else {
-                    self.forwardingTarget = listenInfo.observer;
-                    NSAssert(![self respondsToSelector:listenInfo.selector], @"have same method in BJNotificationCenter");
-                    SuppressPerformSelectorLeakWarning([self performSelector:listenInfo.selector withObject:notification]);
-                }
-            }
-        }];
+- (void)_addObserver:(id)observer
+            selector:(SEL)aSelector
+                name:(NSString *)aName
+              object:(nullable id)anObject {
+    _BJNotificationElement *element = [_BJNotificationElement elementWithObserver:observer selector:aSelector name:aName object:anObject];
+    [_notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([element isEqual:obj]) {
+            [_notificationObserverArray removeObjectAtIndex:idx];
+            *stop = YES;
+        }
     }];
-    [anOperation start];
+    [_notificationObserverArray addObject:element];
+    [self _testWithObject:element methodName:NSStringFromSelector(_cmd)];
 }
 
 - (void)postNotificationName:(NSString *)aName
                       object:(nullable id)anObject {
-    BJNotification *bjNotification = [BJNotification notificationWithName:aName object:anObject];
-    [self postNotification:bjNotification];
+    BJNotification *notification = [BJNotification notificationWithName:aName object:anObject];
+    [self postNotification:notification];
+}
+
+- (void)postNotification:(BJNotification *)notification {
+    dispatch_sync(_queue, ^{
+        [self _postNotification:notification];
+    });
+}
+
+- (void)_postNotification:(BJNotification *)notification {
+    [_notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        _BJNotificationElement *element = obj;
+        if ([notification.name isEqualToString:element->_name]) {
+            SEL selector;
+            NSValue *selValue = element->_selector;
+            [selValue getValue:&selector];
+            if (element->_object) {
+                if (notification.object == element->_object) {
+                    _forwardingTarget = element->_observer;
+                    NSAssert(![self respondsToSelector:selector], @"have same method in BJNotificationCenter");
+                    SuppressPerformSelectorLeakWarning([self performSelectorOnMainThread:selector withObject:notification waitUntilDone:YES];);
+                }
+            } else {
+                _forwardingTarget = element->_observer;
+                NSAssert(![self respondsToSelector:selector], @"have same method in BJNotificationCenter");
+                SuppressPerformSelectorLeakWarning([self performSelectorOnMainThread:selector withObject:notification waitUntilDone:YES];);
+            }
+        }
+    }];
 }
 
 - (void)removeObserver:(id)observer {
@@ -154,92 +273,36 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 - (void)removeObserver:(id)observer
                   name:(nullable NSString *)aName
                 object:(nullable id)anObject {
-    NSAssert(observer, @"the observer can not be nil");
-    if (!self.notificationObserverArray.count) {
-        return;
-    }
-    NSBlockOperation *anOperation = [NSBlockOperation new];
-    __weak __typeof(anOperation) weakOperation = anOperation;
-    [anOperation addExecutionBlock:^{
-        [self removeObserver:observer name:aName object:anObject withOperation:weakOperation];
-    }];
-    [anOperation start];
+    if (!_notificationObserverArray.count) return;
+    
+    dispatch_sync(_queue, ^{
+        [self _removeObserver:observer name:aName object:anObject];
+    });
 }
 
-#pragma mark - Private Method
-
-- (NSMutableArray *)notificationObserverArray {
-    if (!_notificationObserverArray) {
-        _notificationObserverArray = [NSMutableArray new];
-    }
-    return _notificationObserverArray;
+- (void)_removeObserver:(id)observer
+                   name:(nullable NSString *)aName
+                 object:(nullable id)anObject {
+    NSString *identifier = [NSString stringWithFormat:@"%p", observer];
+    _BJNotificationElement *removeElement = [_BJNotificationElement elementWithObserverIdentifier:identifier name:aName object:anObject];
+    [_notificationObserverArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        _BJNotificationElement *element = obj;
+        if ([element canRemoveFromContainer:removeElement]) {
+            [_notificationObserverArray removeObjectAtIndex:idx];
+            [self _testWithObject:element methodName:NSStringFromSelector(_cmd)];
+        }
+    }];
 }
 
 - (id)forwardingTargetForSelector:(SEL)aSelector {
     id target = _forwardingTarget;
-    self.forwardingTarget = nil;
-    if ([target respondsToSelector:aSelector]) {
-        return target;
-    }
+    _forwardingTarget = nil;
+    if ([target respondsToSelector:aSelector]) return target;
+    
     return [super forwardingTargetForSelector:aSelector];
 }
 
-- (void)addObserver:(id)observer
-           selector:(SEL)aSelector
-               name:(NSString *)aName
-             object:(nullable id)anObject
-      withOperation:(NSOperation *)operation {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"self.weakObserver = %@ And self.object = %@ And self.name == '%@'", observer, anObject, aName];
-    [self.notificationObserverArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BJNotificationMessage *listenInfo = obj;
-        BOOL isSame = [predicate evaluateWithObject:listenInfo];
-        if (isSame) {
-            [self.notificationObserverArray removeObjectAtIndex:idx];
-            *stop = YES;
-        }
-    }];
-    BJNotificationMessage *message = [BJNotificationMessage new];
-    message.observer = observer;
-    message.name = aName;
-    message.selector = aSelector;
-    message.object = anObject;
-    message.observerIdentifier = [NSString stringWithFormat:@"%p", message.observer];
-    [self.notificationObserverArray addObject:message];
-    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
-//    BJLog(@"\nadd thead:--%@",[NSThread currentThread]);
-}
-
-- (void)removeObserver:(id)observer
-                  name:(nullable NSString *)aName
-                object:(nullable id)anObject
-         withOperation:(NSOperation *)operation {
-    [self.notificationObserverArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        BJNotificationMessage *message = obj;
-        if (message.observer) {
-            if ([message.observerIdentifier isEqualToString:[NSString stringWithFormat:@"%p", observer]]) {
-                if ((aName && !anObject) && ([message.name isEqualToString:aName])) {
-                    [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
-                } else if ((!aName && anObject) && (message.object == anObject)) {
-                    [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
-                } else if ((aName && anObject) && ([message.name isEqualToString:aName]) && (message.object == anObject)) {
-                    [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
-                } else if (!aName && !anObject) {
-                    [self.notificationObserverArray removeObjectAtIndex:idx];
-                    [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
-                }
-            }
-        } else {
-            [self.notificationObserverArray removeObjectAtIndex:idx];
-            [self testWithObject:message methodName:NSStringFromSelector(_cmd)];
-        }
-    }];
-//    BJLog(@"\nremove thead:--%@",[NSThread currentThread]);
-}
-
-- (void)testWithObject:(id)object methodName:(NSString *)name {
+- (void)_testWithObject:(id)object methodName:(NSString *)name {
 #ifdef DEBUG
     if ([self respondsToSelector:NSSelectorFromString(@"bj_testBlock")]) {
 #pragma clang diagnostic push
@@ -260,32 +323,28 @@ NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUN
 
 @implementation NSObject (BJDebugDescription)
 
-#pragma mark - Public Method
-
 - (NSString *)bj_debugDescription {
     NSMutableString *description = [NSMutableString new];
     [description appendFormat:@"*****%s*****\n<%@: %p>\n", __FUNCTION__, [self class], self];
+    
     unsigned int count;
     objc_property_t *propertyList = class_copyPropertyList([self class], &count);
     for (int i = 0; i < count; i++) {
         objc_property_t propertyClass = propertyList[i];
         NSString *propertyName = [NSString stringWithUTF8String:property_getName(propertyClass)];
         ;
-        if (i == 0) {
-            [description appendFormat:@"{\n"];
-        }
+        if (i == 0) [description appendFormat:@"{\n"];
 #if OutputDebugDescription
         [description appendFormat:@"\t%@: %@", propertyName, [self valueForKey:propertyName]];
 #else
         [description appendFormat:@"\t%@: %p", propertyName, [self valueForKey:propertyName]];
 #endif
-        if (i == count - 1) {
-            [description appendFormat:@"\n}"];
-        } else {
-            [description appendFormat:@",\n"];
-        }
+        if (i == count - 1) [description appendFormat:@"\n}"];
+        else [description appendFormat:@",\n"];
     }
     return [description copy];
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

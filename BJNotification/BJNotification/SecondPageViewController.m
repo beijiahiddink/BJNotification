@@ -1,9 +1,12 @@
 //
 //  SecondPageViewController.m
-//  BJNotification
+//  BJNotification <https://github.com/beijiahiddink/BJNotification>
 //
 //  Created by WangXu on 15/11/11.
 //  Copyright © 2015年 beijiahiddink. All rights reserved.
+//
+//  For the full copyright and license information, please view the README
+//  file that was distributed with this source code.
 //
 
 #import "SecondPageViewController.h"
@@ -26,11 +29,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"SecondPage";
+    self.tipLabel.text = nil;
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveText:) name:TextNotificationKey object:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     [[BJNotificationCenter defaultCenter] postNotificationName:TextNotificationKey object:textAction()];
 }
 

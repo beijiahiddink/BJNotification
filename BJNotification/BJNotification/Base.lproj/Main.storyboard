@@ -38,8 +38,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="reg-Zi-w9e">
-                                <rect key="frame" x="278" y="500" width="45" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="reg-Zi-w9e">
+                                <rect key="frame" x="278" y="520" width="45" height="30"/>
                                 <state key="normal" title="下一页"/>
                                 <connections>
                                     <segue destination="4aO-r0-BKN" kind="show" id="bGV-Se-IC3"/>
@@ -80,8 +80,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ER-I4-bU2">
-                                <rect key="frame" x="270" y="500" width="60" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ER-I4-bU2">
+                                <rect key="frame" x="270" y="520" width="60" height="30"/>
                                 <state key="normal" title="发送通知"/>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                     <rect key="frame" x="170" y="680" width="60" height="30"/>
