@@ -1,27 +1,27 @@
-##BJNotification
-![iOS](https://img.shields.io/badge/iOS-7.0-yellow.svg)           
-![version](https://img.shields.io/badge/version-v1.0-blue.svg)
-[![weibo](https://img.shields.io/badge/weibo-@beijiahiddink-green.svg)](http://weibo.com/u/3788698095)
-[![mail](https://img.shields.io/badge/mail-@beijiahiddink-pink.svg)](mailto://wangxu@beijiahiddink.com)
+#BJNotification
+![iOS](https://img.shields.io/badge/iOS-7.0-yellow.svg?style=flat)           
+![version](https://img.shields.io/badge/version-v1.0-blue.svg?style=flat)
+[![weibo](https://img.shields.io/badge/weibo-@beijiahiddink-green.svg?style=flat)](http://weibo.com/u/3788698095)
+[![mail](https://img.shields.io/badge/mail-@beijiahiddink-pink.svg?style=flat)](mailto://wangxu@beijiahiddink.com)
 
-###什么是BJNotification
+##什么是BJNotification
 本项目高仿NSNotification框架。
 
-###该怎样去使用
+##该怎样去使用
 使用方式大体与NSNotification使用类似。
-####通知注册方法
+###通知注册方法
     [[BJNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTip:) name:@"TipNotification" object:nil];
 
-####通知发送方法
+###通知发送方法
     [[BJNotificationCenter defaultCenter] postNotificationName:@"TipNotification" object:nil];
 
-####清理注册人
+###清理注册人
     [[BJNotificationCenter defaultCenter] removeObserver:self];
 
-###最后
+##最后
 喜欢本demo的可以给我[加星](https://github.com/beijiahiddink/BJNotification/stargazers)哦!
 
-###License
+##License
 The MIT License (MIT)
 
 Copyright (c) 2013-2016 beijiahiddink (<https://github.com/beijiahiddink/BJNotification>)
