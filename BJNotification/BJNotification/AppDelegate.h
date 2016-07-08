@@ -5,7 +5,7 @@
 //  Created by WangXu on 15/10/26.
 //  Copyright (c) 2015年 beijiahiddink. All rights reserved.
 //
-//  For the full copyright and license information, please view the README
+//  For the full copyright and license information, please view the LICENSE
 //  file that was distributed with this source code.
 //
 

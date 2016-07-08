@@ -5,7 +5,7 @@
 //  Created by WangXu on 15/10/26.
 //  Copyright (c) 2015年 beijiahiddink. All rights reserved.
 //
-//  For the full copyright and license information, please view the README
+//  For the full copyright and license information, please view the LICENSE
 //  file that was distributed with this source code.
 //
 
@@ -22,6 +22,14 @@ _Pragma("clang diagnostic pop") \
 
 #define BJLog(format, ...) \
 NSLog((@"[文件名:%s]" "[函数名:%s]" "[行号:%d]" format), __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+
+#define dispatch_main_async_safe(block)\
+if ([NSThread isMainThread]) {\
+block();\
+} else {\
+dispatch_async(dispatch_get_main_queue(), block);\
+}
+
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -43,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithName:(NSString *)name
                       object:(nullable id)object
                     userInfo:(nullable NSDictionary *)userInfo {
-    NSAssert(name, @"the name can not be nil");
     self = [super init];
     if (self) {
         _name = [name copy];
@@ -161,7 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)canRemoveFromContainer:(id)object {
     if (!_observer || ![object isMemberOfClass:[_BJNotificationElement class]]) return YES;
-     _BJNotificationElement *temp = object;
+    _BJNotificationElement *temp = object;
     
     if ([_observerIdentifier isEqualToString:temp->_observerIdentifier]) {
         if ((temp->_name && !temp->_object) && ([_name isEqualToString:temp->_name])) return YES;
@@ -182,7 +189,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BJNotificationCenter () {
     NSMutableArray *_notificationObserverArray;
-    dispatch_queue_t _queue;
    __unsafe_unretained id _forwardingTarget;
 }
 
@@ -202,7 +208,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _queue = dispatch_queue_create("com.beijiahiddink.BJNotificationCenter", DISPATCH_QUEUE_SERIAL);
         _notificationObserverArray = [NSMutableArray new];
     }
     return self;
@@ -212,7 +217,7 @@ NS_ASSUME_NONNULL_BEGIN
            selector:(SEL)aSelector
                name:(NSString *)aName
              object:(nullable id)anObject {
-    dispatch_sync(_queue, ^{
+    dispatch_main_async_safe(^{
         [self _addObserver:observer selector:aSelector name:aName object:anObject];
     });
 }
@@ -239,7 +244,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (void)postNotification:(BJNotification *)notification {
-    dispatch_sync(_queue, ^{
+    dispatch_main_async_safe(^{
         [self _postNotification:notification];
     });
 }
@@ -253,14 +258,10 @@ NS_ASSUME_NONNULL_BEGIN
             [selValue getValue:&selector];
             if (element->_object) {
                 if (notification.object == element->_object) {
-                    _forwardingTarget = element->_observer;
-                    NSAssert(![self respondsToSelector:selector], @"have same method in BJNotificationCenter");
-                    SuppressPerformSelectorLeakWarning([self performSelectorOnMainThread:selector withObject:notification waitUntilDone:YES];);
+                    SuppressPerformSelectorLeakWarning([element->_observer performSelector:selector withObject:notification];);
                 }
             } else {
-                _forwardingTarget = element->_observer;
-                NSAssert(![self respondsToSelector:selector], @"have same method in BJNotificationCenter");
-                SuppressPerformSelectorLeakWarning([self performSelectorOnMainThread:selector withObject:notification waitUntilDone:YES];);
+                SuppressPerformSelectorLeakWarning([element->_observer performSelector:selector withObject:notification];);
             }
         }
     }];
@@ -273,9 +274,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeObserver:(id)observer
                   name:(nullable NSString *)aName
                 object:(nullable id)anObject {
-    if (!_notificationObserverArray.count) return;
-    
-    dispatch_sync(_queue, ^{
+    dispatch_main_async_safe(^{
         [self _removeObserver:observer name:aName object:anObject];
     });
 }
@@ -283,6 +282,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_removeObserver:(id)observer
                    name:(nullable NSString *)aName
                  object:(nullable id)anObject {
+    if (!_notificationObserverArray.count) return;
     NSString *identifier = [NSString stringWithFormat:@"%p", observer];
     _BJNotificationElement *removeElement = [_BJNotificationElement elementWithObserverIdentifier:identifier name:aName object:anObject];
     [_notificationObserverArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -292,14 +292,6 @@ NS_ASSUME_NONNULL_BEGIN
             [self _testWithObject:element methodName:NSStringFromSelector(_cmd)];
         }
     }];
-}
-
-- (id)forwardingTargetForSelector:(SEL)aSelector {
-    id target = _forwardingTarget;
-    _forwardingTarget = nil;
-    if ([target respondsToSelector:aSelector]) return target;
-    
-    return [super forwardingTargetForSelector:aSelector];
 }
 
 - (void)_testWithObject:(id)object methodName:(NSString *)name {
