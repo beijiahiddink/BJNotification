@@ -1,6 +1,6 @@
 #BJNotification
 [![CocoaPods](https://img.shields.io/cocoapods/v/BJNotification.svg)](https://img.shields.io/cocoapods/v/BJNotification.svg)
-![iOS](https://img.shields.io/badge/iOS-7.0-yellow.svg?style=flat)           
+[![twitter](https://img.shields.io/badge/twitter-@beijiahiddink-blue.svg?style=flat)](https://twitter.com/beijiahiddink)          
 [![weibo](https://img.shields.io/badge/weibo-@beijiahiddink-green.svg?style=flat)](http://weibo.com/u/3788698095)
 [![mail](https://img.shields.io/badge/mail-@beijiahiddink-pink.svg?style=flat)](mailto://wangxu@beijiahiddink.com)
 
@@ -42,4 +42,4 @@ open BJNotification
 喜欢本项目的可以给我[加星](https://github.com/beijiahiddink/BJNotification/stargazers)哦！
 
 ##License
-BJNotification is released under the MIT license. See [LICENSE](https://github.com/beijiahiddink/BJNotification/blob/master/LICENSE) for details  
+BJNotification is released under the MIT license. See [LICENSE](LICENSE) for details  
