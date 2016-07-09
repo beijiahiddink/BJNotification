@@ -8,6 +8,6 @@ s.authors = { 'beijiahiddink' => 'beijiahiddink@163.com' }
 s.source = { :git => "https://github.com/beijiahiddink/BJNotification.git", :tag => s.version}
 s.requires_arc = true
 s.ios.deployment_target = '7.0'
-s.source_files = "BJNotification", "*.{h,m}"
+s.source_files = "BJNotificationFW/BJNotificationFW", "*.{h,m}"
 end
 
