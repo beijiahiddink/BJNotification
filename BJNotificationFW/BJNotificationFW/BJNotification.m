@@ -189,7 +189,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BJNotificationCenter () {
     NSMutableArray *_notificationObserverArray;
-   __unsafe_unretained id _forwardingTarget;
 }
 
 @end
