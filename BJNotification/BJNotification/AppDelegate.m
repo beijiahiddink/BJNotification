@@ -13,15 +13,13 @@
 
 typedef int BJMark;
 static BJMark tIndex;
+static NSArray *verseArray;
 
 NSString *const TextNotificationKey = @"TextNotification";
 
 NSString *textAction() {
-    NSArray *array = @[@"静夜思",@"窗前明月光",@"疑是地上霜",@"举头望明月",@"低头思故乡"];
-    while (tIndex == array.count) {
-        tIndex = 0;
-    }
-    return array[tIndex++];
+    while (tIndex == verseArray.count) tIndex = 0;
+    return verseArray[tIndex++];
 }
 
 @interface AppDelegate ()
@@ -30,6 +28,10 @@ NSString *textAction() {
 @end
 
 @implementation AppDelegate
+
++ (void)initialize {
+    if (self == [AppDelegate class]) verseArray = @[@"静夜思",@"窗前明月光",@"疑是地上霜",@"举头望明月",@"低头思故乡"];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.

@@ -126,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)elementWithObserverIdentifier:(NSString *)identifier
                                          name:(nullable NSString *)name
-                                       object:(nullable id)object{
+                                       object:(nullable id)object {
     return [[self alloc] initWithObserverIdentifier:identifier name:name object:object];
 }
 
