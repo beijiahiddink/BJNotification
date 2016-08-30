@@ -1,7 +1,7 @@
 # BJNotification
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/BJNotification.svg)](https://img.shields.io/cocoapods/v/BJNotification.svg)
-[![twitter](https://img.shields.io/badge/twitter-@beijiahiddink-blue.svg?style=flat)](https://twitter.com/beijiahiddink)          
+[![twitter](https://img.shields.io/badge/twitter-@beijiahiddink-blue.svg?style=flat)](https://twitter.com/beijiahiddink)  
 [![weibo](https://img.shields.io/badge/weibo-@beijiahiddink-green.svg?style=flat)](http://weibo.com/u/3788698095)
 [![mail](https://img.shields.io/badge/mail-@beijiahiddink-pink.svg?style=flat)](mailto://wangxu@beijiahiddink.com)
 
